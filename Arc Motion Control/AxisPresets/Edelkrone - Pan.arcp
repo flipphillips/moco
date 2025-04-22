@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scen:scene xmlns:scen="http://caliri.com/motion/scene">
+  <scen:axis graphColor="0" graphHide="false" runMaxAcceleration="40000" pulseRate="1000" acceleration="2" viewPosition="0" stepsPerUnit="100" units="ft" integral="false" base="0" graphSolo="false" runMaxVelocity="20000"/>
+</scen:scene>

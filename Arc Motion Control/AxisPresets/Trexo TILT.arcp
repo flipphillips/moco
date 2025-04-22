@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scen:scene xmlns:scen="https://www.dragonframe.com/scene/">
+  <scen:axis pulseRate="128000" viewPosition="0" units="deg" integral="false" graphColor="0" runMaxVelocity="20000" runMaxAcceleration="40000" acceleration="5" graphSolo="false" base="0" graphHide="false" stepsPerUnit="853.33000000000004"/>
+</scen:scene>
