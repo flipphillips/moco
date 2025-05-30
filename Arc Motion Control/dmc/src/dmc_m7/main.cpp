@@ -1944,8 +1944,8 @@ void stopAll(uint8_t emergency)
 
       motors[m].maxAcceleration = maxAcceleration;
     }
-    goMotionMove.state = GO_MO_INACTIVE;
   }
+  goMotionMove.state = GO_MO_INACTIVE;
 }
 
 int32_t stopMotor(Motor *motor, int32_t motorIndex, int8_t emergency)
