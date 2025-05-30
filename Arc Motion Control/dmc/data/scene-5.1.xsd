@@ -1,0 +1,1192 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    elementFormDefault="qualified"
+    xmlns:scene="https://www.dragonframe.com/scene/"
+    targetNamespace="https://www.dragonframe.com/scene/"
+    >
+    <xs:element name="scene">
+        <xs:complexType>
+            <xs:sequence>
+
+                <!-- exposures (for bracketing or multi-pass) -->
+                <xs:element name="pass" type="scene:passType"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                <xs:element name="movieSettings" type="scene:cameraSettingsType" minOccurs="0" maxOccurs="1" />
+
+                <!-- axis for manual camera moves (not moco related) -->
+                <xs:element name="axis" type="scene:axisType"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- axis for manual camera moves (not moco related) -->
+                <xs:element name="axisTarget" type="scene:axisTargetType"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- virtuals configuration -->
+                <xs:element name="virtualConfiguration" type="scene:virtualConfigurationType"
+                        minOccurs="0" maxOccurs="1" />
+
+                <!-- production reminders tied to specific frames -->
+                <xs:element name="xnote" type="scene:xnoteSetType"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- edit decision list -->
+                <xs:element name="edl" type="scene:edlType" />
+
+                                <!-- audio file information -->
+                <xs:element name="audio" type="scene:audioType"
+                                        minOccurs="0" maxOccurs="1" />
+
+                                <!-- v4 audio file information -->
+                                <xs:element name="audioFile" type="scene:audioFileType"
+                                        minOccurs="0" maxOccurs="unbounded" />
+
+                                <xs:element name="audioTrack" type="scene:audioTrackType"
+                                        minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- dialog tracks (track readings) -->
+                                <xs:element name="dialogTrack4" type="scene:dialogTrack4Type"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                                <!-- deprecated -->
+                                <xs:element name="dialogTrack" type="scene:dialogTrackType"
+                                        minOccurs="0" maxOccurs="unbounded" deprecated="true" />
+
+                                <!-- dialog markers -->
+                <xs:element name="dialogMarkers" type="scene:dialogMarkerType"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- v2 dialogue tracks (track readings) -->
+                <xs:element name="dialogueTrack" type="scene:dialogueTrackType"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- line-up (rotoscoping, chroma key) layer -->
+                <xs:element name="layer" type="scene:layerType"
+                                        minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- capture camera name -->
+                <xs:element name="captureSource" type="xs:string" deprecated="true" />
+
+                <!-- video source camera name -->
+                <xs:element name="videoSource" type="xs:string" deprecated="true" />
+
+                <xs:element name="camera" type="scene:cameraType" minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- user notes for top of x-sheet -->
+                <xs:element name="xsheetNotes" type="xs:string"/>
+                <!-- animator name for top of x-sheet -->
+                <xs:element name="xsheetAnimator" type="xs:string"/>
+
+                <!-- camera notes show up in cinematography window -->
+                <xs:element name="cameraNotes" type="xs:string"/>
+
+                <!-- live view zoom positions -->
+                <xs:element name="liveViewZoomPosition" type="scene:liveViewZoomPositionType"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                <xs:element name="focusCheckPosition" type="scene:liveViewZoomPositionType"
+                    minOccurs="0" maxOccurs="1" />
+
+                <!-- stereo setup -->
+                <xs:element name="stereoSetup" type="scene:stereoSetupType"
+                    minOccurs="0" maxOccurs="1" />
+
+                <!-- dmx setup -->
+                <xs:element name="dmx3Setup" type="scene:dmx3Type"
+                    minOccurs="0" maxOccurs="1" />
+
+                <!-- deprecated dmx setup -->
+                <xs:element name="dmxSetup" type="scene:dmxType"
+                    minOccurs="0" maxOccurs="1" deprecated="true" />
+
+                <!-- moco setup -->
+                <xs:element name="mocoSetup" type="scene:mocoType"
+                    minOccurs="0" maxOccurs="1" />
+
+                <!-- assist levels setup -->
+                <xs:element name="assistLevels" type="scene:assistLevelsType"
+                    minOccurs="0" maxOccurs="1" deprecated="true"/>
+
+                <!-- drawing data -->
+                <xs:element name="drawing" type="scene:drawingType"
+                                        minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- drawing data -->
+                <xs:element name="xsheetDrawing" type="scene:drawingType"
+                    minOccurs="0" maxOccurs="1" />
+
+                <!-- x-sheet columns data -->
+                <xs:element name="xsheetColumn" type="scene:xsheetColumnType"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- face set data -->
+                <xs:element name="faceSet" type="scene:faceSetType"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- deprecated : production reminders tied to specific frames -->
+                <xs:element name="note" type="scene:noteType"
+                    minOccurs="0" maxOccurs="unbounded" deprecated="true" />
+
+                <!-- alternate composition guide -->
+                <xs:element name="altComp" type="scene:altCompType" minOccurs="0" maxOccurs="unbounded" deprecated="true"/>
+
+                <!-- broadcast safe -->
+                <xs:element name="broadcastSafe" type="scene:broadcastSafeType" minOccurs="0" maxOccurs="unbounded" deprecated="true"/>
+
+                <!-- grid -->
+                <xs:element name="grid" type="scene:gridType" minOccurs="0" maxOccurs="unbounded" deprecated="true"/>
+
+                <!-- zebra -->
+                <xs:element name="zebra" type="scene:zebraType" minOccurs="0" maxOccurs="unbounded" />
+
+                <!-- notepad text -->
+                <xs:element name="notepad" type="xs:string"/>
+
+            </xs:sequence>
+            <xs:attribute name="fileVersion" type="xs:double" use="optional" default="3" />
+
+            <xs:attribute name="fps" type="xs:double" use="optional" default="24" />
+            <xs:attribute name="startFrame" type="xs:int" use="optional" default="1"/>
+            <xs:attribute name="endFrame" type="xs:int" use="optional" default="48"/>
+
+            <xs:attribute name="playbackExposure" type="xs:int" use="optional" default="0"/>
+            <xs:attribute name="videoGrayLevel" type="xs:int" use="optional" default="0" />
+
+                        <!-- tv safe info
+            <xs:attribute name="tvOverlayShow" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="tvOverlayHD" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="tvOverlayActionSafe" type="xs:boolean" use="optional" default="true" />
+            <xs:attribute name="tvOverlayTitleSafe" type="xs:boolean" use="optional" default="true" />
+            <xs:attribute name="tvOverlaySizeToMask" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="tvOverlayFitWidth" type="xs:boolean" use="optional" default="true" />
+                        -->
+
+            <!-- aspect mask info -->
+            <xs:attribute name="aspectMaskLocked" type="xs:boolean" use="optional" default="false" deprecated="true"/>
+            <xs:attribute name="aspectMask" type="xs:double" use="optional" default="0" deprecated="true"/>
+            <xs:attribute name="aspectMaskOpacity" type="xs:float" use="optional" default="0.6" deprecated="true"/>
+            <xs:attribute name="aspectMaskShow" type="xs:boolean" use="optional" default="true" deprecated="true"/>
+
+            <xs:attribute name="aspectMarkersShow" type="xs:boolean" use="optional" default="false" deprecated="true"/>
+            <xs:attribute name="aspectMarkersOpacity" type="xs:float" use="optional" default="1.0" deprecated="true"/>
+            <xs:attribute name="aspectMarkersColor" type="xs:int" use="optional" default="101" deprecated="true"/>
+            <xs:attribute name="aspectMaskOutline" type="xs:boolean" use="optional" default="true" deprecated="true"/>
+            <xs:attribute name="aspectMaskCrosshairs" type="xs:boolean" use="optional" default="true" deprecated="true"/>
+            <xs:attribute name="aspectMaskText" type="xs:boolean" use="optional" default="true" deprecated="true"/>
+            <xs:attribute name="aspectMaskSafeShowing" type="xs:boolean" use="optional" default="false" deprecated="true"/>
+            <xs:attribute name="aspectMaskSafeHorizontal" type="xs:double" use="optional" default="5" deprecated="true"/>
+            <xs:attribute name="aspectMaskSafeVertical" type="xs:double" use="optional" default="5" deprecated="true"/>
+            <xs:attribute name="aspectMaskSafeOpacity" type="xs:float" use="optional" default="0.0" deprecated="true"/>
+
+            <!-- maskPushIn -->
+            <xs:attribute name="maskPushIn" type="xs:double" use="optional" default="0" deprecated="true"/>
+            <xs:attribute name="maskOffsetHorizontal" type="xs:int" use="optional" default="0" deprecated="true"/>
+            <xs:attribute name="maskOffsetVertical" type="xs:int" use="optional" default="0" deprecated="true"/>
+
+
+            <!-- transform info -->
+            <xs:attribute name="transformMirror" type="xs:boolean" use="optional" default="false" deprecated="true"/>
+            <xs:attribute name="transformRotate" type="xs:boolean" use="optional" default="false" deprecated="true"/>
+            <xs:attribute name="transformPortrait" type="xs:boolean" use="optional" default="false" deprecated="true"/>
+
+            <!-- chroma key info
+            <xs:attribute name="chromaOn" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="chromaColor" type="xs:int" use="optional" default="0"/>
+            <xs:attribute name="chromaTolerance" type="xs:int" use="optional" default="40"/>
+            <xs:attribute name="chromaLineUp" type="xs:boolean" use="optional" default="false" />
+            -->
+
+            <!-- layer info
+            <xs:attribute name="layerAbove" type="xs:boolean" use="optional" default="true" />
+            -->
+
+            <!-- x-sheet info
+            <xs:attribute name="frameIncrement" type="xs:int" use="optional" default="1" />
+            -->
+
+            <!-- video info -->
+            <xs:attribute name="videoSizePercent" type="xs:int" use="optional" default="100" />
+            <xs:attribute name="videoScaleQuality" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="videoCustomResolution" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="videoCustomWidth" type="xs:int" use="optional" default="640" />
+            <xs:attribute name="videoCustomHeight" type="xs:int" use="optional" default="480" />
+            <xs:attribute name="videoCompressionLevel" type="xs:int" use="optional" default="50" />
+
+            <!-- grid info
+            <xs:attribute name="gridShow" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="gridHorizontalSections" type="xs:int" use="optional" default="3" />
+            <xs:attribute name="gridVerticalSections" type="xs:int" use="optional" default="3" />
+            <xs:attribute name="gridSizeToMask" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="gridOpacity" type="xs:int" use="optional" default="50" />
+            <xs:attribute name="gridColor" type="xs:int" use="optional" default="101" />
+            -->
+
+            <!-- notes -->
+            <xs:attribute name="cameraOperator" type="xs:string" use="optional" default="" />
+
+            <!-- stereo viewing -->
+            <xs:attribute name="cineStereoMode" type="xs:int" use="optional" default="0" />
+
+            <xs:attribute name="stereoMode" type="xs:int" use="optional" default="1" />
+            <xs:attribute name="stereoConvL" type="xs:double" use="optional" default="0" />
+            <xs:attribute name="stereoConvR" type="xs:double" use="optional" default="0" />
+            <xs:attribute name="stereoDepthL" type="xs:double" use="optional" default="0" />
+            <xs:attribute name="stereoDepthR" type="xs:double" use="optional" default="0" />
+            <xs:attribute name="stereoExposureL" type="xs:int" use="optional" default="0" />
+            <xs:attribute name="stereoExposureR" type="xs:int" use="optional" default="0" />
+            <xs:attribute name="stereoModeFlop" type="xs:boolean" use="optional" default="false" />
+
+            <xs:attribute name="stereoCaliperWidth" type="xs:int" use="optional" default="2048" />
+            <xs:attribute name="stereoCaliperPushIn" type="xs:boolean" use="optional" default="false" />
+
+            <!-- xsheet setup -->
+            <xs:attribute name="xsheetTheme" type="xs:int" use="optional" default="1"/>
+            <xs:attribute name="xsheetFontSize" type="xs:int" use="optional" default="0"/>
+            <xs:attribute name="xsheetPaperWidth" type="xs:double" use="optional" default="8.5" />
+            <xs:attribute name="xsheetPaperHeight" type="xs:double" use="optional" default="11.0" />
+            <xs:attribute name="xsheetFramesPerDivision" type="xs:int" use="optional" default="8"/>
+            <xs:attribute name="xsheetDivisionsPerSheet" type="xs:int" use="optional" default="6"/>
+
+            <xs:attribute name="virtualShootMultiple" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="stepByHolds" type="xs:boolean" use="optional" default="false" />
+
+            <xs:attribute name="focusExposurePreviewOffset" type="xs:string" use="required"/>
+
+            <!-- gamepad -->
+            <xs:attribute name="gamepadEnabled" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="gamepadName" type="xs:string" use="required"/>
+
+            <xs:attribute name="viewScale" type="xs:double" use="optional" default="1.0"  deprecated="true"/>
+            <xs:attribute name="viewOffsetX" type="xs:int" use="required" deprecated="true"/>
+            <xs:attribute name="viewOffsetY" type="xs:int" use="required" deprecated="true"/>
+
+            <!--  hidden -->
+            <xs:attribute name="autoConform" type="xs:boolean" use="optional" default="false" />
+
+        </xs:complexType>
+    </xs:element>
+
+    <!-- camera type -->
+    <xs:complexType name="cameraType">
+        <xs:sequence>
+            <!-- live view zoom positions -->
+            <xs:element name="liveViewZoomPosition" type="scene:liveViewZoomPositionType"
+                minOccurs="0" maxOccurs="unbounded" />
+
+            <xs:element name="focusCheckPosition" type="scene:liveViewZoomPositionType"
+                minOccurs="0" maxOccurs="1" />
+
+            <!-- assist levels setup -->
+            <xs:element name="assistLevels" type="scene:assistLevelsType"
+                minOccurs="0" maxOccurs="1" />
+
+            <!-- alternate composition guide -->
+            <xs:element name="altComp" type="scene:altCompType" minOccurs="0" maxOccurs="unbounded" />
+
+            <!-- broadcast safe -->
+            <xs:element name="broadcastSafe" type="scene:broadcastSafeType" minOccurs="0" maxOccurs="unbounded" />
+
+            <!-- grid -->
+            <xs:element name="grid" type="scene:gridType" minOccurs="0" maxOccurs="unbounded" />
+
+        </xs:sequence>
+
+        <xs:attribute name="captureSource" type="xs:string" use="required"/>
+        <xs:attribute name="captureSourceUniqueId" type="xs:string" use="required"/>
+        <xs:attribute name="videoSource" type="xs:string" use="required"/>
+        <xs:attribute name="videoSourceUniqueId" type="xs:string" use="required"/>
+
+        <xs:attribute name="transformMirror" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="transformRotate" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="transformPortrait" type="xs:boolean" use="optional" default="false" />
+
+        <xs:attribute name="excludeAssist" type="xs:boolean" use="optional" default="false" />
+
+        <xs:attribute name="viewScale" type="xs:double" use="optional" default="1.0" />
+        <xs:attribute name="viewOffsetX" type="xs:int" use="required"/>
+        <xs:attribute name="viewOffsetY" type="xs:int" use="required"/>
+
+        <!-- aspect mask info -->
+        <xs:attribute name="aspectMaskLocked" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="aspectMask" type="xs:double" use="optional" default="0" />
+        <xs:attribute name="aspectMaskOpacity" type="xs:float" use="optional" default="0.6" />
+        <xs:attribute name="aspectMaskShow" type="xs:boolean" use="optional" default="true" />
+
+        <xs:attribute name="aspectMarkersShow" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="aspectMarkersOpacity" type="xs:float" use="optional" default="1.0" />
+        <xs:attribute name="aspectMarkersColor" type="xs:int" use="optional" default="101" />
+        <xs:attribute name="aspectMaskOutline" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="aspectMaskCrosshairs" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="aspectMaskText" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="aspectMaskSafeShowing" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="aspectMaskSafeHorizontal" type="xs:double" use="optional" default="5" />
+        <xs:attribute name="aspectMaskSafeVertical" type="xs:double" use="optional" default="5" />
+        <xs:attribute name="aspectMaskSafeOpacity" type="xs:float" use="optional" default="0.0" />
+
+        <!-- maskPushIn -->
+        <xs:attribute name="maskPushIn" type="xs:double" use="optional" default="0" />
+        <xs:attribute name="maskOffsetHorizontal" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="maskOffsetVertical" type="xs:int" use="optional" default="0"/>
+
+    </xs:complexType>
+
+    <!-- edl type : edit decision list -->
+    <xs:complexType name="edlType">
+        <xs:sequence>
+            <xs:element name="vframe" type="scene:vframeType" minOccurs="0"
+                maxOccurs="unbounded"/>
+            <xs:element name="hiddenFrame" type="scene:hiddenFrameType" minOccurs="0"
+                maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- vframe type : for EDL -->
+    <xs:complexType name="vframeType">
+        <xs:attribute name="vframe" type="xs:int" use="required"/>
+        <xs:attribute name="file" type="xs:int" use="required"/>
+    </xs:complexType>
+
+    <!-- hidden frame type : for EDL -->
+    <xs:complexType name="hiddenFrameType">
+        <xs:sequence>
+            <xs:element name="files" type="xs:int" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="vframe" type="xs:int" use="required"/>
+    </xs:complexType>
+
+
+    <!-- axis type : for camera move calculations -->
+    <xs:complexType name="axisType">
+        <xs:sequence>
+            <!--  new move data -->
+            <xs:element name="points" type="scene:point"
+                minOccurs="0" maxOccurs="unbounded"  />
+            <xs:element name="controlPoints" type="scene:point"
+                minOccurs="0" maxOccurs="unbounded"  />
+
+            <!--  indexed axis data -->
+            <xs:element name="childNodes" type="scene:drawingNodeType"
+                minOccurs="0" maxOccurs="unbounded"  />
+
+            <!--  ghost data -->
+            <xs:element name="ghostNodes" type="scene:drawingNodeType"
+                minOccurs="0" maxOccurs="unbounded"  />
+
+            <!-- adjustment layer levels - only if this is adjustment layer -->
+            <xs:element name="adjustmentLayerLevels" type="scene:dmxChannelType" minOccurs="0" maxOccurs="1" />
+
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="preset" type="xs:string" use="required"/>
+
+        <xs:attribute name="integral" type="xs:boolean" use="optional" default="true"/>
+        <xs:attribute name="base" type="xs:int" use="required"/>
+
+        <xs:attribute name="enabled" type="xs:boolean" use="optional" default="true"/>
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="blurEnabled" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="nodal" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="liveControl" type="xs:boolean" use="optional" default="false"/>
+
+        <xs:attribute name="currentPosition" type="xs:double" use="optional" default="0"/>
+
+        <!--  0 = none/manual, 1 = IOTA, 2 = ARDUINO -->
+        <xs:attribute name="connectionType" type="xs:int" use="optional" default="0"/>
+        <!--  0 == IOTA #1, 1 == IOTA # 2 -->
+        <xs:attribute name="connectionIndex" type="xs:int" use="optional" default="0"/>
+        <!-- channel # -->
+        <xs:attribute name="connectionChannel" type="xs:int" use="optional" default="0"/>
+        <!-- 0 = normal, 1 = 3D Slider, 2 = Focus -->
+        <xs:attribute name="function" type="xs:int" use="optional" default="0"/>
+        <!-- Indexed Axis Count -->
+        <xs:attribute name="indexCount" type="xs:int" use="optional" default="0"/>
+
+        <xs:attribute name="cameraIndex" type="xs:int" use="optional" default="0"/>
+
+        <xs:attribute name="stepsPerUnit" type="xs:double" use="optional" default="0"/>
+        <xs:attribute name="pulseRate" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="acceleration" type="xs:double" use="optional" default="0"/>
+        <xs:attribute name="frameToFrameSpeed" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="limitsEnabled" type="xs:boolean" use="optional" default="true"/>
+        <xs:attribute name="limitMin" type="xs:double" use="optional" default="0"/>
+        <xs:attribute name="limitMinSet" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="limitMax" type="xs:double" use="optional" default="0"/>
+        <xs:attribute name="limitMaxSet" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="limitSet" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="limitSetSwap" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="backlash" type="xs:double" use="optional" default="0"/>
+        <xs:attribute name="backlashRollback" type="xs:double" use="optional" default="0"/>
+        <xs:attribute name="settleTime" type="xs:double" use="optional" default="0"/>
+
+        <xs:attribute name="runMaxVelocity" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="runMaxAcceleration" type="xs:int" use="optional" default="0"/>
+
+        <!-- mm, cm, m, in, ft -->
+        <xs:attribute name="units" type="xs:string" use="required"/>
+        <xs:attribute name="homePosition" type="xs:double" use="optional" default="0"/>
+        <xs:attribute name="swapJogDirection" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="jogButtonSet" type="xs:int" use="optional" default="0"/>
+
+        <xs:attribute name="viewPosition" type="xs:int" use="required"/>
+        <xs:attribute name="graphColor" type="xs:int" use="required"/>
+        <xs:attribute name="graphSolo" type="xs:boolean" use="required"/>
+        <xs:attribute name="graphHide" type="xs:boolean" use="required"/>
+        <xs:attribute name="graphFlipped" type="xs:boolean" use="optional" default="false"/>
+        <!-- display units, which can be different from units defined in config -->
+        <xs:attribute name="graphScale" type="xs:double" use="optional" default="1.0"/>
+
+        <xs:attribute name="virt" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="usedInVirtual" type="xs:boolean" use="optional" default="false"/>
+
+        <!-- gamepad assignment -->
+        <xs:attribute name="gamepadAssignment" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="gamepadInvert" type="xs:boolean" use="optional" default="false"/>
+
+        <!-- adjustment layer -->
+        <xs:attribute name="adjustmentLayer" type="xs:int" use="optional" default="-1" />
+        <xs:attribute name="adjustmentLayerLevelsEnabled" type="xs:boolean" use="optional" default="false"/>
+
+        <!-- time warp -->
+        <xs:attribute name="timeWarpEnabled" type="xs:boolean" use="optional" default="false"/>
+
+        <xs:attribute name="aimPointCollapsedMode" type="xs:boolean" use="optional" default="false" />
+
+        <xs:attribute name="recording" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="inchingSpeedFactor" type="xs:int" use="optional" default="0" />
+        <xs:attribute name="animatorControlled" type="xs:boolean" use="optional" default="false"/>
+
+        <xs:attribute name="channelCoupling" type="xs:int" use="optional" default="0"/>
+
+    </xs:complexType>
+
+    <!-- target type : set of target points -->
+    <xs:complexType name="axisTargetType">
+        <xs:sequence>
+            <!--  target points -->
+            <xs:element name="points" type="xs:double"
+                minOccurs="0" maxOccurs="unbounded"  />
+        </xs:sequence>
+        <xs:attribute name="frame" type="xs:int"/>
+        <xs:attribute name="snapshot" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- virtual configuration -->
+    <xs:complexType name="virtualConfigurationType">
+        <xs:sequence>
+            <xs:element name="axis" type="xs:int" minOccurs="0" maxOccurs="unbounded"  />
+            <!-- boom table -->
+            <xs:element name="boomTable" type="xs:string"/>
+            <xs:element name="jogButtonSet" type="xs:int" minOccurs="0" maxOccurs="unbounded"  />
+        </xs:sequence>
+        <xs:attribute name="type" type="xs:int"/>
+        <xs:attribute name="boomLength" type="xs:double" use="optional" default="0.0"/>
+        <xs:attribute name="boomExtensionLength" type="xs:double" use="optional" default="0.0"/>
+        <xs:attribute name="nodalOffsetX" type="xs:double" use="optional" default="0.0"/>
+        <xs:attribute name="nodalOffsetY" type="xs:double" use="optional" default="0.0"/>
+        <xs:attribute name="nodalOffsetZ" type="xs:double" use="optional" default="0.0"/>
+        <xs:attribute name="aimSafeDistance" type="xs:double" use="optional" default="10.0"/>
+
+        <xs:attribute name="cameraLineAxisPosition" type="xs:int" use="optional" default="0"/>
+
+        <xs:attribute name="imagePlaneMovementDistance" type="xs:double" use="optional" default="0.0"/>
+    </xs:complexType>
+
+    <!-- move type : for camera move calculations -->
+    <xs:complexType name="moveType">
+        <xs:sequence>
+            <xs:element name="startFrame" type="xs:int"/>
+            <xs:element name="endFrame" type="xs:int"/>
+            <xs:element name="easeIn" type="xs:int"/>
+            <xs:element name="easeOut" type="xs:int"/>
+            <xs:element name="startPosition" type="xs:double"/>
+            <xs:element name="endPosition" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- note type : x-sheet notes that pop-up during scene -->
+    <xs:complexType name="noteType">
+        <xs:sequence>
+            <xs:element name="frame" type="xs:int"/>
+            <xs:element name="message" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- note set -->
+    <xs:complexType name="xnoteSetType">
+        <xs:sequence>
+                <xs:element name="note" type="scene:xnoteType"
+                    minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="alertable" type="xs:boolean" use="optional" default="true"/>
+        <xs:attribute name="postNotes" type="xs:boolean" use="optional" default="false"/>
+    </xs:complexType>
+
+    <!-- note type : x-sheet notes that pop-up during scene -->
+    <xs:complexType name="xnoteType">
+        <xs:attribute name="frame" type="xs:int" use="required" />
+        <xs:attribute name="message" type="xs:string" use="required" />
+        <xs:attribute name="alert" type="xs:boolean" use="required"/>
+        <xs:attribute name="magic" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="magicEndFrame" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="magicIndentLevel" type="xs:int" use="optional" default="0"/>
+    </xs:complexType>
+
+
+    <!-- exposure type
+         each scene has at least one (defaults to 'X1')
+         contains camera settings for the exposure
+     -->
+    <xs:complexType name="passType">
+        <xs:sequence>
+            <!-- description -->
+            <xs:element name="description" type="xs:string"/>
+            <!-- camera settings -->
+            <xs:element name="cameraSettings" type="scene:cameraSettingsType"
+                    minOccurs="0" maxOccurs="unbounded" />
+                        <xs:element name="mocoIndex" type="xs:int" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="camera" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="enabled" type="xs:boolean" use="optional" default="true"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="color" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="captureFeed" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="automatic" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="automaticTime" type="xs:double" use="optional" default="0"/>
+        <xs:attribute name="linkGroup" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="stereoPosition" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="isoLocked" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="goMotionEnabled" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="makingOf" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+
+    <!-- camera settings for an exposure -->
+    <xs:complexType name="cameraSettingsType">
+        <xs:sequence>
+            <xs:element name="setting" type="scene:cameraSettingType"
+                    minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="camera" type="xs:string" use="required"/>
+        <xs:attribute name="exposureValue" type="xs:int" use="optional" default="-1" />
+    </xs:complexType>
+
+    <!-- camera setting -->
+    <xs:complexType name="cameraSettingType">
+        <xs:attribute name="property" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- dialog track -->
+    <xs:complexType name="dialogTrack4Type">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+                        <xs:element name="dialog" type="scene:dialog4Type"
+                minOccurs="0" maxOccurs="unbounded" />
+                        <xs:element name="phonetic" type="scene:dialog4Type"
+                minOccurs="0" maxOccurs="unbounded" />
+                        <xs:element name="shapes" type="scene:dialogShapeType"
+                                minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+
+        <xs:attribute name="showing" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="layerOrder" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="audioLayerOrder" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="layerViewType" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="hudX" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="hudY" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="showDuringPlayback" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="textMode" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="showInTimeline" type="xs:boolean" use="optional" default="false" />
+
+        <xs:attribute name="faceSet" type="xs:string" use="required"/>
+
+        <xs:attribute name="color" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false" />
+
+        <!--  UI attributes -->
+        <xs:attribute name="playblastPosition" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="playblastMirrored" type="xs:boolean" use="optional" default="false" />
+
+        <xs:attribute name="minimized" type="xs:boolean" use="required" />
+        <xs:attribute name="dlgWord" type="xs:boolean" use="required" />
+        <xs:attribute name="dlgPhonetic" type="xs:boolean" use="required" />
+        <xs:attribute name="dlgMouth" type="xs:boolean" use="required" />
+        <xs:attribute name="dlgMouthSmall" type="xs:boolean" use="required" />
+        <xs:attribute name="dlgEye" type="xs:boolean" use="required" />
+        <xs:attribute name="dlgEyeSmall" type="xs:boolean" use="required" />
+
+    </xs:complexType>
+
+    <!-- dialog shape track -->
+    <xs:complexType name="dialogShapeType">
+        <xs:sequence>
+                <xs:element name="shape" type="scene:dialog4Type"
+                        minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- phonetic characters for a dialog track, for a specific frame -->
+    <xs:complexType name="dialog4Type">
+        <xs:attribute name="frame" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="data" type="xs:string" use="required"/>
+    </xs:complexType>
+
+        <!-- dialog marker -->
+    <xs:complexType name="dialogMarkerType">
+        <xs:sequence>
+            <xs:element name="frame" type="xs:int"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- audio type : represents audio file used in scene -->
+    <xs:complexType name="audioTrackType">
+        <xs:sequence>
+                <xs:element name="segment" type="scene:audioSegmentType"
+                                minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="enabled" type="xs:boolean" use="optional" default="true"/>
+        <xs:attribute name="soloed" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="minimized" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="audioLayerOrder" type="xs:int" use="optional" default="0"/>
+    </xs:complexType>
+
+    <xs:complexType name="audioSegmentType">
+        <xs:attribute name="soundFile" type="xs:string" use="required"/>
+        <xs:attribute name="microsecondOffset" type="xs:long" use="required"/>
+        <xs:attribute name="clipOffset" type="xs:long" use="required"/>
+        <xs:attribute name="clipLength" type="xs:long" use="required"/>
+        <xs:attribute name="volume" type="xs:int" use="required"/>
+    </xs:complexType>
+
+    <!-- audio type : represents audio file used in scene -->
+    <xs:complexType name="audioFileType">
+        <xs:attribute name="soundFile" type="xs:string" use="required"/>
+        <xs:attribute name="soundFileRelative" type="xs:string" use="required"/>
+    </xs:complexType>
+
+
+    <!-- line-up (rotoscoping) layer -->
+    <xs:complexType name="layerType">
+        <xs:sequence>
+                <xs:element name="refMarker" type="xs:int" maxOccurs="unbounded" />
+                <xs:element name="mattePoints" type="scene:point" minOccurs="0" maxOccurs="unbounded"  />
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="layerFile" type="xs:string" use="required"/>
+        <xs:attribute name="layerFileRelative" type="xs:string" use="required"/>
+        <xs:attribute name="owner" type="xs:int" use="optional" default="0" />
+        <xs:attribute name="camera" type="xs:int" use="optional" default="-1" />
+        <xs:attribute name="take" type="xs:string" use="required"/>
+        <xs:attribute name="exposure" type="xs:int" use="required"/>
+        <xs:attribute name="scale" type="xs:double" use="required"/>
+        <xs:attribute name="offsetX" type="xs:int" use="required"/>
+        <xs:attribute name="offsetY" type="xs:int" use="required"/>
+        <xs:attribute name="transformMirror" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="transformRotate" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="transformPortrait" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="frameOffset" type="xs:int" use="required"/>
+        <xs:attribute name="showing" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="footageRate" type="xs:double" use="required"/>
+        <xs:attribute name="holdFrames" type="xs:int" use="required"/>
+        <xs:attribute name="sequence" type="xs:boolean" use="optional" default="false" />
+
+        <xs:attribute name="layerOpacity" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="chromaOn" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="chromaColor" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="chromaTolerance" type="xs:int" use="optional" default="40"/>
+        <xs:attribute name="chromaSmoothness" type="xs:int" use="optional" default="0"/>
+
+        <xs:attribute name="audioInProject" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="audioVolume" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="videoInAudioWorkspace" type="xs:boolean" use="optional" default="false" />
+
+        <!-- when popped out as reference -->
+        <xs:attribute name="frameOffsetSynced" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="windowed" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="pinned" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="winX" type="xs:int" use="required"/>
+        <xs:attribute name="winY" type="xs:int" use="required"/>
+        <xs:attribute name="winWidth" type="xs:int" use="required"/>
+        <xs:attribute name="winHeight" type="xs:int" use="required"/>
+        <xs:attribute name="windowTransformMirror" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="windowTransformRotate" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="windowTransformPortrait" type="xs:boolean" use="optional" default="false" />
+
+        <!-- clipping -->
+        <xs:attribute name="markIn" type="xs:int" use="required"/>
+        <xs:attribute name="markOut" type="xs:int" use="required"/>
+
+        <!-- reference video -->
+        <xs:attribute name="refMarkIn" type="xs:int" use="required"/>
+        <xs:attribute name="refMarkOut" type="xs:int" use="required"/>
+
+        <xs:attribute name="matteShowing" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="matteInverse" type="xs:boolean" use="optional" default="false" />
+
+        <!-- cropping -->
+        <xs:attribute name="cropX" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="cropY" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="cropWidth" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="cropHeight" type="xs:int" use="optional" default="0"/>
+
+    </xs:complexType>
+
+    <!-- live view zoom type -->
+    <xs:complexType name="liveViewZoomPositionType">
+        <xs:attribute name="enabled" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="x" type="xs:double" use="required"/>
+        <xs:attribute name="y" type="xs:double" use="required"/>
+
+        <xs:attribute name="viewScale" type="xs:double" use="optional" default="1.0" />
+        <xs:attribute name="viewOffsetX" type="xs:int" use="required"/>
+        <xs:attribute name="viewOffsetY" type="xs:int" use="required"/>
+    </xs:complexType>
+
+    <!-- stereo setup type -->
+    <xs:complexType name="stereoSetupType">
+        <xs:attribute name="leftEyeDominant" type="xs:boolean" use="required" />
+        <xs:attribute name="underslung" type="xs:boolean" use="required" />
+    </xs:complexType>
+
+    <!-- deprecated dmx type -->
+    <xs:complexType name="dmxType">
+
+        <xs:sequence>
+            <xs:element name="channels" type="scene:dmxChannelType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+
+        <xs:attribute name="worklight" type="xs:int" use="optional" default="0" />
+
+        <xs:attribute name="relayEvent" type="xs:string" use="required"/>
+        <xs:attribute name="logicIn" type="xs:string" use="required"/>
+        <xs:attribute name="logicOut" type="xs:string" use="required"/>
+        <xs:attribute name="relayHold" type="xs:double" use="optional" default="0.1" />
+        <xs:attribute name="logicOutHold" type="xs:double" use="optional" default="0.1" />
+
+    </xs:complexType>
+
+    <!-- dmx3 type -->
+    <xs:complexType name="dmx3Type">
+
+        <xs:sequence>
+            <xs:element name="programs" type="scene:dmxProgramType"
+                    minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="groups" type="scene:dmxGroupType"
+                    minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="triggerOutputs" type="scene:dmxTriggerType"
+                    minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="triggerInputs" type="scene:dmxTriggerType"
+                    minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+
+        <xs:attribute name="enabled" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="powerWaitTime" type="xs:long" use="optional" default="4000"/>
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false" />
+
+        <xs:attribute name="bashEnabled" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="bashWaitTime" type="xs:long" use="optional" default="250"/>
+        <xs:attribute name="lightsUpWaitTime" type="xs:long" use="optional" default="1000"/>
+        <xs:attribute name="rampLights" type="xs:boolean" use="optional" default="false" />
+
+        <xs:attribute name="soundLevel" type="xs:int" use="required" />
+        <xs:attribute name="liveViewX" type="xs:int" use="required" />
+        <xs:attribute name="liveViewY" type="xs:int" use="required" />
+        <xs:attribute name="liveViewWidth" type="xs:int" use="required" />
+        <xs:attribute name="liveViewVisible" type="xs:boolean" use="optional" default="true"/>
+
+        <xs:attribute name="videoGrayLevel" type="xs:int" use="optional" default="0" />
+
+        <!--  will be moving this out, for per exposure -->
+        <xs:attribute name="relayEvent" type="xs:string" use="required"/>
+        <xs:attribute name="logicIn" type="xs:string" use="required"/>
+        <xs:attribute name="logicOut" type="xs:string" use="required"/>
+        <xs:attribute name="relayHold" type="xs:double" use="optional" default="0.1" />
+        <xs:attribute name="logicOutHold" type="xs:double" use="optional" default="0.1" />
+
+    </xs:complexType>
+
+    <!-- dmx program type -->
+    <xs:complexType name="dmxProgramType">
+
+        <xs:sequence>
+            <xs:element name="channels" type="scene:dmxChannelType"
+                    minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="parent" type="xs:int" use="optional" default="-1" />
+        <xs:attribute name="exposure" type="xs:int" use="optional" default="-1" />
+        <xs:attribute name="bash" type="xs:boolean" use="optional" default="false" />
+
+        <xs:attribute name="hideLinked" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="hideUnprogrammed" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+
+    <!-- deprecated: dmx group type -->
+    <xs:complexType name="dmxGroupType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="color" type="xs:int" use="optional" default="0"/>
+    </xs:complexType>
+
+    <!-- dmx3 Trigger type -->
+    <xs:complexType name="dmxTriggerType">
+        <xs:attribute name="id" type="xs:int" use="required"/>
+        <xs:attribute name="uni" type="xs:int" use="required"/>
+        <xs:attribute name="event" type="xs:string" use="required"/>
+        <xs:attribute name="holdTime" type="xs:double" use="optional" default="0.1" />
+    </xs:complexType>
+
+    <!-- dmx channel type -->
+    <xs:complexType name="dmxChannelType">
+        <xs:sequence>
+            <xs:element name="keyframes" type="scene:dmxChannelKeyframeType"
+                minOccurs="0" maxOccurs="unbounded"  />
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="channel" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="channelWidth" type="xs:int" use="optional" default="1"/>
+        <xs:attribute name="groupLeader" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="group" type="xs:int" use="optional" default="-1" />
+        <xs:attribute name="inherit" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="solo" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="filter" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="synthDimmer" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="profile" type="xs:string" use="required"/>
+        <xs:attribute name="integer" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="graphMode" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="trigger" type="xs:int" use="optional" default="0" />
+        <xs:attribute name="triggerBlipWidth" type="xs:int" use="optional" default="0" />
+        <xs:attribute name="uni" type="xs:int" use="optional" default="0"/>
+
+        <!-- lighting fixture -->
+        <xs:attribute name="fixtureManufacturer" type="xs:string" use="required"/>
+        <xs:attribute name="fixtureName" type="xs:string" use="required"/>
+        <xs:attribute name="fixtureMode" type="xs:string" use="required"/>
+
+        <xs:attribute name="fixtureElementCount" type="xs:int" use="optional" default="0" /> <!-- if set, this is 'fixture' parent -->
+        <xs:attribute name="fixtureElementId" type="xs:int" use="optional" default="-1"/> <!-- if fixture element, this is index -->
+        <xs:attribute name="fixtureExpanded" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="fixtureColorComponent" type="xs:int" use="optional" default="0"/>
+
+        <xs:attribute name="fixtureHideElements" type="xs:boolean" use="optional" default="false" />  <!-- does fixture hide the hidden elements -->
+        <xs:attribute name="fixtureElementHidden" type="xs:boolean" use="optional" default="false" /> <!-- hide flag for elements -->
+
+        <!--  0 = program, 1 = on, 2 = off -->
+        <xs:attribute name="light" type="xs:int" use="required" />
+
+        <xs:attribute name="showBadge" type="xs:boolean" use="required" />
+
+        <!--  visual representation, only used in Global program -->
+        <xs:attribute name="locationX" type="xs:int" use="required" />
+        <xs:attribute name="locationY" type="xs:int" use="required" />
+        <xs:attribute name="expanded" type="xs:boolean" use="required" />
+        <xs:attribute name="color" type="xs:int" use="optional" default="0"/>
+
+        <xs:attribute name="showThread" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="threadX" type="xs:double" use="optional" default="0.0" />
+        <xs:attribute name="threadY" type="xs:double" use="optional" default="0.0" />
+
+    </xs:complexType>
+
+    <!-- dmx keyframe type -->
+    <xs:complexType name="dmxChannelKeyframeType">
+        <xs:attribute name="frame" type="xs:int" use="required" />
+        <xs:attribute name="level" type="xs:double" use="required" />
+        <xs:attribute name="smooth" type="xs:int" use="required" />
+        <xs:attribute name="smoothLeft" type="xs:double" use="required" />
+        <xs:attribute name="smoothRight" type="xs:double" use="required" />
+    </xs:complexType>
+
+    <!-- moco type : for moco setup info -->
+    <xs:complexType name="mocoType">
+        <xs:sequence>
+                <xs:element name="connections" type="scene:connectionType"
+                        minOccurs="0" maxOccurs="unbounded"  />
+        </xs:sequence>
+
+        <xs:attribute name="gomoEnabled" type="xs:boolean" use="required" />
+        <xs:attribute name="gomoPreroll" type="xs:double" use="optional" default="0.5"/>
+        <xs:attribute name="mocoBlurDegrees" type="xs:int" use="optional" default="0"/>
+
+        <xs:attribute name="livePreroll" type="xs:double" use="optional" default="2.0"/>
+        <xs:attribute name="livePostroll" type="xs:double" use="optional" default="2.0"/>
+        <xs:attribute name="liveBloopLocation" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="liveBloopDmxChannel" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="liveBloopDuration" type="xs:double" use="optional" default="0.1"/>
+
+        <xs:attribute name="videoGrayLevel" type="xs:int" use="optional" default="0" />
+
+        <xs:attribute name="safeSpeed" type="xs:double" use="optional" default="4.0"/>
+
+    </xs:complexType>
+
+    <!-- assistLevels type : adjust video assist image levels -->
+    <xs:complexType name="connectionType">
+            <xs:attribute name="id" type="xs:int" use="required" /> <!-- unique id -->
+            <xs:attribute name="type" type="xs:string" use="required" />
+            <xs:attribute name="port" type="xs:string" use="required" />
+            <xs:attribute name="required" type="xs:boolean" use="required"/>
+            <xs:attribute name="dmx" type="xs:boolean" use="optional" default="false"/>
+            <xs:attribute name="triggers" type="xs:boolean" use="optional" default="false"/>
+            <xs:attribute name="arcMocoNumber" type="xs:int" use="required" />
+            <xs:attribute name="dmxUniverse" type="xs:int" use="optional" default="0"/>
+    </xs:complexType>
+
+    <!-- assistLevels type : adjust video assist image levels -->
+    <xs:complexType name="assistLevelsType">
+        <xs:attribute name="inLow" type="xs:int" use="required" />
+        <xs:attribute name="inHigh" type="xs:int" use="required" />
+        <xs:attribute name="gamma" type="xs:double" use="required"/>
+
+        <xs:attribute name="outLow" type="xs:int" use="required" />
+        <xs:attribute name="outHigh" type="xs:int" use="required" />
+
+        <xs:attribute name="affectCine" type="xs:boolean" use="required"/>
+
+        <xs:attribute name="addFrames" type="xs:int" use="optional" default="1" />
+    </xs:complexType>
+
+    <xs:complexType name="drawingType">
+        <xs:sequence>
+            <xs:element name="nodes" type="scene:drawingNodeType"
+                minOccurs="0" maxOccurs="unbounded"  />
+        </xs:sequence>
+        <xs:attribute name="showing" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="layerName" type="xs:string" use="required" />
+        <xs:attribute name="layerOpacity" type="xs:int" use="optional" default="100" />
+        <xs:attribute name="showDuringPlayback" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="owner" type="xs:int" use="optional" default="0" />
+    </xs:complexType>
+
+    <!-- drawing node -->
+    <xs:complexType name="drawingNodeType">
+        <xs:sequence>
+            <xs:element name="points" type="scene:point"
+                minOccurs="0" maxOccurs="unbounded"  />
+            <xs:element name="tickFunctionPoints" type="scene:point"
+                minOccurs="0" maxOccurs="unbounded"  />
+            <xs:element name="controlPoints" type="scene:point"
+                minOccurs="0" maxOccurs="unbounded"  />
+        </xs:sequence>
+
+        <xs:attribute name="type" type="xs:string" use="required" />
+        <xs:attribute name="color" type="xs:int" use="required" />
+        <xs:attribute name="strokeWidth" type="xs:double" use="required" />
+        <xs:attribute name="tickCount" type="xs:int" use="required" />
+        <xs:attribute name="tickMeasureOrientation" type="xs:string" use="required" />
+        <xs:attribute name="tickDisplayOrientation" type="xs:string" use="required" />
+        <xs:attribute name="tickColor" type="xs:int" use="required" />
+        <xs:attribute name="tickStrokeWidth" type="xs:double" use="required" />
+        <xs:attribute name="tickPlayForward" type="xs:boolean" use="required" default="true"/>
+        <xs:attribute name="tickPlayback" type="xs:boolean" use="required"/>
+        <xs:attribute name="tickPlaybackSync" type="xs:boolean" use="required"/>
+        <xs:attribute name="tickPlaybackShape" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="tickPlaybackShapeSize" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="tickPlaybackFrame" type="xs:int" use="required" />
+        <xs:attribute name="smooth" type="xs:boolean" use="required"/>
+        <xs:attribute name="closed" type="xs:boolean" use="required"/>
+        <xs:attribute name="pencil" type="xs:boolean" use="required"/>
+        <xs:attribute name="opacity" type="xs:float" use="required" />
+        <xs:attribute name="userData" type="xs:int" use="required" />
+        <xs:attribute name="text" type="xs:string" use="required"/>
+        <xs:attribute name="centerHatch" type="xs:boolean" use="optional" default="false"/>
+    </xs:complexType>
+
+    <!-- point -->
+    <xs:complexType name="point">
+        <xs:attribute name="x" type="xs:double" use="required" />
+        <xs:attribute name="y" type="xs:double" use="required" />
+        <xs:attribute name="type" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="smoothness" type="xs:double" use="optional" default="0" />
+    </xs:complexType>
+
+    <!-- x-sheet column meta-data -->
+    <xs:complexType name="xsheetColumnType">
+        <xs:attribute name="type" type="xs:int" use="required" />
+        <xs:attribute name="subType" type="xs:int" use="required" />
+        <xs:attribute name="subTypeChild" type="xs:int" use="required" />
+        <xs:attribute name="columnWidth" type="xs:int" use="required" />
+    </xs:complexType>
+
+
+    <!-- face set -->
+    <xs:complexType name="faceSetType">
+        <xs:sequence>
+            <xs:element name="badges" type="scene:faceSetBadgeType"
+                minOccurs="0" maxOccurs="unbounded"  />
+        </xs:sequence>
+        <xs:attribute name="file" type="xs:string" use="required"/> <!--  library file path -->
+        <xs:attribute name="imgSize" type="xs:int" use="required"/> <!--  img size, 50-200 -->
+    </xs:complexType>
+
+
+    <!-- face set badge -->
+    <xs:complexType name="faceSetBadgeType">
+        <xs:attribute name="shapeName" type="xs:string" use="required"/>
+        <xs:attribute name="locationX" type="xs:double" use="required" />
+        <xs:attribute name="locationY" type="xs:double" use="required" />
+    </xs:complexType>
+
+    <!-- alternative composition type -->
+    <xs:complexType name="altCompType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="showing" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="ratio" type="xs:double" use="optional" default="0" />
+        <xs:attribute name="pushIn" type="xs:double" use="optional" default="0" />
+        <xs:attribute name="offsetHorizontal" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="offsetVertical" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="crosshairs" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="grid" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="gridHorizontalSections" type="xs:int" use="optional" default="3" />
+        <xs:attribute name="gridVerticalSections" type="xs:int" use="optional" default="3" />
+        <xs:attribute name="opacity" type="xs:int" use="optional" default="50" />
+        <xs:attribute name="color"  type="xs:int" use="optional" default="100" />
+    </xs:complexType>
+
+    <!-- grid type -->
+    <xs:complexType name="gridType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="showing" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="horizontalSections" type="xs:int" use="optional" default="3" />
+        <xs:attribute name="verticalSections" type="xs:int" use="optional" default="3" />
+        <xs:attribute name="sizeToMask" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="opacity" type="xs:int" use="optional" default="50" />
+        <xs:attribute name="color" type="xs:int" use="optional" default="101" />
+    </xs:complexType>
+
+    <!-- broadcast safe type -->
+    <xs:complexType name="broadcastSafeType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="showing" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="highDef" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="actionSafe" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="titleSafe" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="sizeToMask" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="fitWidth" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="opacity" type="xs:int" use="optional" default="50" />
+        <xs:attribute name="color" type="xs:int" use="optional" default="101" />
+    </xs:complexType>
+
+
+    <!-- zebra -->
+    <xs:complexType name="zebraType">
+        <xs:attribute name="tolerance" type="xs:double" use="optional" default="0" />
+        <xs:attribute name="color" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="stripe" type="xs:int" use="optional" default="0"/>
+    </xs:complexType>
+
+
+
+<!--
+
+  deprecated v3 stuff
+
+-->
+        <!-- dialog track -->
+        <xs:complexType name="dialogTrackType">
+                <xs:sequence>
+                        <xs:element name="name" type="xs:string"/>
+                        <xs:element name="dialog" type="scene:dialogType"
+                                minOccurs="0" maxOccurs="unbounded" />
+                        <xs:element name="phonetic" type="scene:dialogType"
+                                minOccurs="0" maxOccurs="unbounded" />
+                        <xs:element name="mouth" type="scene:dialogType"
+                                minOccurs="0" maxOccurs="unbounded" />
+                        <xs:element name="eye" type="scene:dialogType"
+                                minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+
+                <xs:attribute name="faceSet" type="xs:string" use="required"/>
+
+                <xs:attribute name="color" type="xs:int" use="optional" default="0"/>
+                <xs:attribute name="locked" type="xs:boolean" use="optional" default="false" />
+
+                <!--  UI attributes -->
+                <xs:attribute name="playblastPosition" type="xs:int" use="optional" default="0"/>
+                <xs:attribute name="playblastMirrored" type="xs:boolean" use="optional" default="false" />
+
+                <xs:attribute name="minimized" type="xs:boolean" use="required" />
+                <xs:attribute name="dlgWord" type="xs:boolean" use="required" />
+                <xs:attribute name="dlgPhonetic" type="xs:boolean" use="required" />
+                <xs:attribute name="dlgMouth" type="xs:boolean" use="required" />
+                <xs:attribute name="dlgMouthSmall" type="xs:boolean" use="required" />
+                <xs:attribute name="dlgEye" type="xs:boolean" use="required" />
+                <xs:attribute name="dlgEyeSmall" type="xs:boolean" use="required" />
+
+        </xs:complexType>
+
+        <!-- phonetic characters for a dialog track, for a specific frame -->
+        <xs:complexType name="dialogType">
+                <xs:sequence>
+                        <xs:element name="frame" type="xs:int"/>
+                        <xs:element name="data" type="xs:string"/>
+                </xs:sequence>
+        </xs:complexType>
+
+        <!-- audio type : represents audio file used in scene -->
+        <xs:complexType name="audioType">
+                <xs:sequence>
+                        <xs:element name="segment" type="scene:segmentType"
+                                        minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+                <xs:attribute name="soundFile" type="xs:string" use="required"/>
+                <xs:attribute name="soundFileRelative" type="xs:string" use="required"/>
+                <xs:attribute name="locked" type="xs:boolean" use="optional" default="false"/>
+        </xs:complexType>
+
+        <!-- audio segment type
+                 the audio track can be edited into multiple segments
+        -->
+        <xs:complexType name="segmentType">
+                <xs:attribute name="microsecondOffset" type="xs:long" use="required"/>
+                <xs:attribute name="clipOffset" type="xs:long" use="required"/>
+                <xs:attribute name="clipLength" type="xs:long" use="required"/>
+        </xs:complexType>
+
+<!--
+  
+  deprecated v2 stuff 
+
+-->
+    <!-- dialogue track -->
+    <xs:complexType name="dialogueTrackType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="dialogue" type="scene:dialogueType"
+                minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="word" type="scene:wordType"
+                minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="color" type="xs:int" use="optional" default="0"/>
+        <xs:attribute name="locked" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+
+    <!-- phonetic characters for a dialogue track, for a specific frame -->
+    <xs:complexType name="dialogueType">
+        <xs:sequence>
+            <xs:element name="frame" type="xs:int"/>
+            <xs:element name="dialogue" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- word for a dialogue track, for a specific frame -->
+    <xs:complexType name="wordType">
+        <xs:sequence>
+            <xs:element name="frame" type="xs:int"/>
+            <xs:element name="word" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

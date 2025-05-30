@@ -21,11 +21,14 @@
 #endif
 
 #define MOTOR_COUNT 8
+#define STEP_PULSE_WIDTH_US 10 // microseconds
 #define MOTOR_CAM_COUNT 9
 
 static GPIO_TypeDef *const port_table[] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH, GPIOI, GPIOJ, GPIOK};
-static const uint16_t mask_table[] = {1 << 0, 1 << 1, 1 << 2,  1 << 3,  1 << 4,  1 << 5,  1 << 6,  1 << 7,
-                                      1 << 8, 1 << 9, 1 << 10, 1 << 11, 1 << 12, 1 << 13, 1 << 14, 1 << 15};
+static const uint16_t mask_table[] = {
+    1 << 0, 1 << 1, 1 << 2,  1 << 3,  1 << 4,  1 << 5,  1 << 6,  1 << 7,
+    1 << 8, 1 << 9, 1 << 10, 1 << 11, 1 << 12, 1 << 13, 1 << 14, 1 << 15
+  };
 
 static inline void digitalWriteFast(pin_size_t pin, PinStatus val)
 {
@@ -54,6 +57,8 @@ int64_t speed[MOTOR_CAM_COUNT];
 uint8_t cameraValue;
 uint16_t cameraOpenAngle;
 uint16_t cameraCloseAngle;
+
+volatile uint32_t stepHighUntil[MOTOR_COUNT] = {0}; // Store when to turn step pins LOW again
 
 struct DmcSharedData
 {
@@ -158,7 +163,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM1)
   {
-    if (++counter == 4000)
+    if (1) // (++counter == 4000) // was 4000
     {
       ++ledCounter;
       if (ledCounter == 90)
@@ -176,69 +181,70 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       cameraCloseAngle = sharedDataPtr->cameraCloseAngle;
 
       speed[MOTOR_COUNT] = sharedDataPtr->nextSpeed[MOTOR_COUNT]; // camera
-      for (int i = 0; i < MOTOR_COUNT; ++i)
-      {
+
+      for (int i = 0; i < MOTOR_COUNT; ++i) {
         digitalWriteFast(dirPins[i], ((1 << i) & sharedDataPtr->motorDirection) ? HIGH : LOW);
         int64_t prevSpeed = speed[i];
         speed[i] = sharedDataPtr->nextSpeed[i];
 
-        // ensure that we land with the pulse off
-        if (prevSpeed && !speed[i] && (sharedDataPtr->accum[i] & 0xFFFFFFFF))
-        {
+        if (prevSpeed && !speed[i] && (sharedDataPtr->accum[i] & 0xFFFFFFFF)) {
           int32_t before = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-          if (before)
-          {
+          if (before) {
             int64_t accum = sharedDataPtr->accum[i];
             bool negative = (accum < 0);
-            if (negative)
-            {
+            if (negative) {
               accum = -accum;
               prevSpeed = -prevSpeed;
             }
             uint8_t dirSection = (accum >> 30) & 0x3;
             accum = (accum & 0xFFFFFFFF00000000UL);
-            if ((prevSpeed > 0 && dirSection) || (prevSpeed < 0 && dirSection == 3))
-            {
+            if ((prevSpeed > 0 && dirSection) || (prevSpeed < 0 && dirSection == 3)) {
               accum += (1LL << 32);
             }
-            if (negative)
-              accum = -accum;
+            if (negative) accum = -accum;
             sharedDataPtr->accum[i] = accum;
             int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-            if (before != after)
-              digitalWriteFast(stepPins[i], after ? HIGH : LOW);
+            if (before != after) {
+              digitalWriteFast(stepPins[i], HIGH);
+              stepHighUntil[i] = micros() + STEP_PULSE_WIDTH_US; // Use pulse width constant
+            }
           }
         }
       }
+
       sharedDataPtr->motorDataLoaded = 0;
-    }
 
-    for (int i = 0; i < MOTOR_COUNT; ++i)
-    {
-      int32_t before = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-      sharedDataPtr->accum[i] += speed[i];
-      int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-      if (before != after)
-        digitalWriteFast(stepPins[i], after ? HIGH : LOW);
-    }
+      for (int i = 0; i < MOTOR_COUNT; ++i) {
+        int32_t before = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
+        sharedDataPtr->accum[i] += speed[i];
+        int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
+        if (before != after) {
+          digitalWriteFast(stepPins[i], HIGH);
+          stepHighUntil[i] = micros() + STEP_PULSE_WIDTH_US; // Use pulse width constant
+        }
+      }
 
-    uint8_t nextCameraPosition;
-    if (speed[MOTOR_COUNT])
-    {
-      sharedDataPtr->accum[MOTOR_COUNT] += speed[MOTOR_COUNT];
-      uint32_t camPos = (sharedDataPtr->accum[MOTOR_COUNT] >> 32) & 0xFFF;
-      nextCameraPosition = (camPos >= cameraOpenAngle && camPos <= cameraCloseAngle) ? 0x3 : 0x0;
-    }
-    else
-    {
-      nextCameraPosition = sharedDataPtr->cameraValue;
-    }
+      for (int i = 0; i < MOTOR_COUNT; ++i) {
+        if (stepHighUntil[i] && micros() >= stepHighUntil[i]) {
+          digitalWriteFast(stepPins[i], LOW);
+          stepHighUntil[i] = 0;
+        }
+      }
 
-    if (cameraValue != nextCameraPosition)
-    {
-      cameraValue = nextCameraPosition;
-      digitalWrite(PIN_CAM_METER, ((cameraValue)&CAMERA_METER) ? HIGH : LOW);
-      digitalWrite(PIN_CAM_SHUTTER, ((cameraValue)&CAMERA_SHUTTER) ? HIGH : LOW);
+      uint8_t nextCameraPosition;
+      if (speed[MOTOR_COUNT]) {
+        sharedDataPtr->accum[MOTOR_COUNT] += speed[MOTOR_COUNT];
+        uint32_t camPos = (sharedDataPtr->accum[MOTOR_COUNT] >> 32) & 0xFFF;
+        nextCameraPosition = (camPos >= cameraOpenAngle && camPos <= cameraCloseAngle) ? 0x3 : 0x0;
+      } else {
+        nextCameraPosition = sharedDataPtr->cameraValue;
+      }
+
+      if (cameraValue != nextCameraPosition) {
+        cameraValue = nextCameraPosition;
+        digitalWrite(PIN_CAM_METER, ((cameraValue) & CAMERA_METER) ? HIGH : LOW);
+        digitalWrite(PIN_CAM_SHUTTER, ((cameraValue) & CAMERA_SHUTTER) ? HIGH : LOW);
+      }
     }
   }
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scen:scene xmlns:scen="https://www.dragonframe.com/scene/" fps="25">
+  <scen:axis name="Travelling" integral="false" base="0" connectionType="1" connectionChannel="1"
+    indexCount="1" stepsPerUnit="400" pulseRate="1000" acceleration="2" frameToFrameSpeed="8"
+    runMaxVelocity="2000" runMaxAcceleration="1000" units="mm" viewPosition="10" graphColor="-48806"
+    graphSolo="false" graphHide="false" />
+  <scen:axis name="Panning" integral="false" base="0" connectionType="1" connectionChannel="2"
+    indexCount="1" stepsPerUnit="266.666" pulseRate="1000" acceleration="2" frameToFrameSpeed="8"
+    runMaxVelocity="2000" runMaxAcceleration="1000" units="deg" viewPosition="20"
+    graphColor="-16711732" graphSolo="false" graphHide="false" />
+  <scen:axis name="Tilting" integral="false" base="0" connectionType="1" connectionChannel="3"
+    indexCount="1" stepsPerUnit="266.666" pulseRate="1000" acceleration="2" frameToFrameSpeed="8"
+    runMaxVelocity="2000" runMaxAcceleration="1000" units="deg" viewPosition="30"
+    graphColor="-14080579" graphSolo="false" graphHide="false" />
+  <scen:axis name="Focus" integral="false" base="0" connectionType="1" connectionChannel="4"
+    indexCount="1" stepsPerUnit="35.555" pulseRate="1000" acceleration="2" frameToFrameSpeed="8"
+    runMaxVelocity="2000" runMaxAcceleration="1000" units="deg" viewPosition="40"
+    graphColor="-16745530" graphSolo="false" graphHide="false" />
+  <scen:virtualConfiguration type="0">
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+  </scen:virtualConfiguration>
+</scen:scene>
