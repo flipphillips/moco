@@ -3,6 +3,10 @@
  * dmc-lite source code
  * Copyright 2023 by DZED Systems LLC
  *
+ * Pulse width mods -
+ * Copyright 2025 by Flip Philips
+ * RITMPS
+ * 
  * Target core: M4 Co-processor
  * Flash split: 1.5MB M7 + 0.5MB M4
  */
@@ -12,12 +16,11 @@
 #include <pinDefinitions.h>
 #include "config.h"
 
-#define PULSE_WIDTH_US 3 // 3us pulse width
-
 #define CAMERA_OFF 0x0
 #define CAMERA_SHUTTER 0x1
 #define CAMERA_METER 0x2
 
+#define DEBUG
 #undef DEBUG
 #define DEBUG_SERIAL Serial1
 
@@ -80,6 +83,36 @@ TIM_HandleTypeDef htim1;
 static const int stepPins[] = { PIN_STEP1, PIN_STEP2, PIN_STEP3, PIN_STEP4, PIN_STEP5, PIN_STEP6, PIN_STEP7, PIN_STEP8 };
 static const int dirPins[] = { PIN_DIR1, PIN_DIR2, PIN_DIR3, PIN_DIR4, PIN_DIR5, PIN_DIR6, PIN_DIR7, PIN_DIR8 };
 
+inline int64_t stepsPerSecondToSpeed(double stepsPerSec) {
+    return static_cast<int64_t>(stepsPerSec * SPEED_SCALE);
+}
+
+inline double speedToStepsPerSecond(int64_t speed) {
+    return static_cast<double>(speed) / SPEED_SCALE;
+}
+
+#ifdef DEBUG
+volatile uint8_t debugHead = 0;
+volatile uint8_t debugTail = 0;
+const int DEBUG_BUF_SIZE = 64;
+struct DebugMsg {
+  uint8_t motor;
+  int64_t speed;
+  uint32_t timestamp;
+};
+volatile DebugMsg debugBuffer[DEBUG_BUF_SIZE];
+
+void enqueueDebug(uint8_t motor, int64_t spd, uint32_t timestamp) {
+  uint8_t nextHead = (debugHead + 1) % DEBUG_BUF_SIZE;
+  if (nextHead != debugTail) {
+    debugBuffer[debugHead].motor = motor;
+    debugBuffer[debugHead].speed = spd;
+    debugBuffer[debugHead].timestamp = timestamp;
+    debugHead = nextHead;
+  }
+}
+#endif // DEBUG
+
 void setup()
 {
   RPC.begin();
@@ -127,14 +160,10 @@ void setup()
   pinMode(PIN_CAM_SHUTTER, OUTPUT);
   digitalWrite(PIN_CAM_SHUTTER, LOW);
 
-  // 200 kHz
+  // Timer setup - see constants in config.h
   htim1.Instance = TIM1;
-#if defined(ARDUINO_ARCH_MBED_PORTENTA)
-  htim1.Init.Prescaler = 49; // H7 seems to default to 400 MHz
-#else
-  htim1.Init.Prescaler = 59; // Giga R1 runs at 480 MHz
-#endif
-  htim1.Init.Period = 19;
+  htim1.Init.Prescaler = TIMER_PRESCALER;
+  htim1.Init.Period = TIMER_PERIOD;
   __HAL_RCC_TIM1_CLK_ENABLE();
   HAL_NVIC_SetPriority(TIM1_UP_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
@@ -142,19 +171,32 @@ void setup()
   HAL_TIM_Base_Start_IT(&htim1);
 
   // debuggery
-#ifdef DEBUG
+  #ifdef DEBUG
   DEBUG_SERIAL.begin(115200);
   while (!DEBUG_SERIAL) {
     ; // Wait for serial monitor to open
   }
   DEBUG_SERIAL.println("M4 USB Serial active");
-#endif
+  #endif
 }
 
 void loop()
 {
   while (1)
   {
+    #ifdef DEBUG
+    while (debugTail != debugHead) {
+      DebugMsg msg = *((DebugMsg*)&debugBuffer[debugTail]);
+      debugTail = (debugTail + 1) % DEBUG_BUF_SIZE;
+      DEBUG_SERIAL.print(msg.timestamp);
+      DEBUG_SERIAL.print(", ");
+      DEBUG_SERIAL.print(msg.motor);
+      DEBUG_SERIAL.print(", ");
+      DEBUG_SERIAL.print(msg.speed);
+      DEBUG_SERIAL.print("\n");
+    }
+    #endif // DEBUG
+
     delay(1000);
   }
 }
@@ -174,7 +216,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM1)
   {
-    if (++counter == 4000)
+    //
+    // outer loop - update things
+    // called every OUTER_LOOP_INTERVAL_MS ms
+    //
+    if (++counter == OUTER_LOOP_TICKS)
     {
       // led blinkinlights + counter reset
       ++ledCounter;
@@ -192,12 +238,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       // shutter
       cameraOpenAngle = sharedDataPtr->cameraOpenAngle;
       cameraCloseAngle = sharedDataPtr->cameraCloseAngle;
-
-      // DEBUG_SERIAL.print("Speed: ");
-      // DEBUG_SERIAL.print(speed[0]);
-      // DEBUG_SERIAL.print("\r");
-
       speed[MOTOR_COUNT] = sharedDataPtr->nextSpeed[MOTOR_COUNT]; // camera
+
+      //
+      // outer loop - update motor directions and speeds
+      //
       for (int i = 0; i < MOTOR_COUNT; ++i)
       {
         digitalWriteFast(dirPins[i], ((1 << i) & sharedDataPtr->motorDirection) ? HIGH : LOW);
@@ -228,7 +273,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
               accum = -accum;
             sharedDataPtr->accum[i] = accum;
             int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-            // In the other logic, this turned it 'on'
+            
+            // I belive this is sort of a 'safety off' thing.
             if (before != after)
               digitalWriteFast(stepPins[i], after ? HIGH : LOW);
           }
@@ -237,16 +283,36 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       sharedDataPtr->motorDataLoaded = 0;
     }
 
+    // This is the fast inner loop
+    // ISR 
+    // Called every 5 µs (200 kHz)
     for (int i = 0; i < MOTOR_COUNT; ++i)
     {
       int32_t before = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
       sharedDataPtr->accum[i] += speed[i];
       int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-      // send a 3-5us pulse only on 0->1 transition
+      // send a PULSE_WIDTH_US pulse only on 0->1 transition
       if (before == 0 && after == 1) {
         digitalWriteFast(stepPins[i], HIGH);
-        delayMicroseconds(PULSE_WIDTH_US);
+
+        // NOP-based delay loop to approximate PULSE_WIDTH_US duration
+        // Avoids using delayMicroseconds() inside ISR
+        for (volatile uint32_t d = 0; d < NOP_COUNT; ++d) {
+          __asm__ __volatile__("nop");
+        }
+        
         digitalWriteFast(stepPins[i], LOW);
+#ifdef DEBUG
+        enqueueDebug(i, speed[i], micros());
+#endif // DEBUG
+      }
+      else if (before == 1 && after == 0) {
+        // This is a 1->0 transition, we don't do anything here
+        // but we could if we wanted to
+      }
+      else {
+        // This is a no-op, we don't do anything here
+        // but we could if we wanted to     
       }
     }
 

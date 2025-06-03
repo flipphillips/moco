@@ -66,3 +66,28 @@
 
 #endif
 
+// Stuff for computing times
+
+
+#ifdef ARDUINO_ARCH_MBED_GIGA
+    constexpr uint32_t CPU_FREQ_HZ = 480'000'000;   // System clock (Giga R1 M4)
+    constexpr uint32_t TIMER_PRESCALER = 59;        // 480 MHz / (59+1) = 8 MHz
+#elif defined(ARDUINO_ARCH_MBED_PORTENTA)
+    constexpr uint32_t CPU_FREQ_HZ = 400'000'000;   // System clock (Portenta H7 M4)
+    constexpr uint32_t TIMER_PRESCALER = 49;       // 400 MHz / (49+1)  = 8 MHz
+#endif
+
+constexpr uint32_t TIMER_TICK_HZ = CPU_FREQ_HZ / (TIMER_PRESCALER + 1); // 8 MHz
+constexpr double TIMER_TICK_NS = 1e9 / TIMER_TICK_HZ; // 125 ns per tick
+
+constexpr uint32_t ISR_RATE_HZ = 200'000;       // ISR frequency (every 5 µs)
+constexpr double ISR_PERIOD_US = 1e6 / ISR_RATE_HZ;  // 5 µs
+constexpr uint32_t TIMER_PERIOD = static_cast<uint32_t>(TIMER_TICK_HZ / ISR_RATE_HZ); // 40 ticks
+
+constexpr uint32_t PULSE_WIDTH_US = 5; // Override with -DPULSE_WIDTH_US=<value>
+constexpr uint32_t NOP_COUNT = static_cast<uint32_t>((PULSE_WIDTH_US * 1000) / TIMER_TICK_NS); // for pulse delay loop
+
+// Outer loop tick: number of ISR cycles per outer loop tick
+constexpr uint32_t OUTER_LOOP_TICKS = 10; // Adjustable: number of ISR cycles per outer loop tick
+constexpr double SPEED_SCALE = static_cast<double>(1ULL << 32) / (double)ISR_RATE_HZ;
+
