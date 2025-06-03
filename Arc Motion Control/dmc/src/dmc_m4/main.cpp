@@ -12,10 +12,13 @@
 #include <pinDefinitions.h>
 #include "config.h"
 
+#define PULSE_WIDTH_US 3 // 3us pulse width
+
 #define CAMERA_OFF 0x0
 #define CAMERA_SHUTTER 0x1
 #define CAMERA_METER 0x2
 
+#undef DEBUG
 #define DEBUG_SERIAL Serial1
 
 #ifdef CORE_CM7
@@ -139,20 +142,19 @@ void setup()
   HAL_TIM_Base_Start_IT(&htim1);
 
   // debuggery
+#ifdef DEBUG
   DEBUG_SERIAL.begin(115200);
   while (!DEBUG_SERIAL) {
     ; // Wait for serial monitor to open
   }
   DEBUG_SERIAL.println("M4 USB Serial active");
-
+#endif
 }
 
 void loop()
 {
   while (1)
   {
-    // DEBUG_SERIAL.print(millis());
-    // DEBUG_SERIAL.print(" - ");
     delay(1000);
   }
 }
@@ -191,9 +193,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       cameraOpenAngle = sharedDataPtr->cameraOpenAngle;
       cameraCloseAngle = sharedDataPtr->cameraCloseAngle;
 
-      DEBUG_SERIAL.print("Speed: ");
-      DEBUG_SERIAL.print(speed[0]);
-      DEBUG_SERIAL.print("\r");
+      // DEBUG_SERIAL.print("Speed: ");
+      // DEBUG_SERIAL.print(speed[0]);
+      // DEBUG_SERIAL.print("\r");
 
       speed[MOTOR_COUNT] = sharedDataPtr->nextSpeed[MOTOR_COUNT]; // camera
       for (int i = 0; i < MOTOR_COUNT; ++i)
@@ -226,12 +228,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
               accum = -accum;
             sharedDataPtr->accum[i] = accum;
             int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-            // send a 3-5us pulse only on 0->1 transition
-            if (before == 0 && after == 1) {
-              digitalWriteFast(stepPins[i], HIGH);
-              delayMicroseconds(3);
-              digitalWriteFast(stepPins[i], LOW);
-            }
+            // In the other logic, this turned it 'on'
+            if (before != after)
+              digitalWriteFast(stepPins[i], after ? HIGH : LOW);
           }
         }
       }
@@ -246,7 +245,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       // send a 3-5us pulse only on 0->1 transition
       if (before == 0 && after == 1) {
         digitalWriteFast(stepPins[i], HIGH);
-        delayMicroseconds(3);
+        delayMicroseconds(PULSE_WIDTH_US);
         digitalWriteFast(stepPins[i], LOW);
       }
     }
