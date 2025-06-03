@@ -16,6 +16,8 @@
 #define CAMERA_SHUTTER 0x1
 #define CAMERA_METER 0x2
 
+#define DEBUG_SERIAL Serial1
+
 #ifdef CORE_CM7
 #error "Make sure to target the M4 Co-processor with flash split 1.5MB M7 + 0.5MB M4"
 #endif
@@ -135,12 +137,22 @@ void setup()
   HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
   HAL_TIM_Base_Init(&htim1);
   HAL_TIM_Base_Start_IT(&htim1);
+
+  // debuggery
+  DEBUG_SERIAL.begin(115200);
+  while (!DEBUG_SERIAL) {
+    ; // Wait for serial monitor to open
+  }
+  DEBUG_SERIAL.println("M4 USB Serial active");
+
 }
 
 void loop()
 {
   while (1)
   {
+    // DEBUG_SERIAL.print(millis());
+    // DEBUG_SERIAL.print(" - ");
     delay(1000);
   }
 }
@@ -162,6 +174,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   {
     if (++counter == 4000)
     {
+      // led blinkinlights + counter reset
       ++ledCounter;
       if (ledCounter == 90)
       {
@@ -174,13 +187,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       }
       counter = 0;
 
+      // shutter
       cameraOpenAngle = sharedDataPtr->cameraOpenAngle;
       cameraCloseAngle = sharedDataPtr->cameraCloseAngle;
+
+      DEBUG_SERIAL.print("Speed: ");
+      DEBUG_SERIAL.print(speed[0]);
+      DEBUG_SERIAL.print("\r");
 
       speed[MOTOR_COUNT] = sharedDataPtr->nextSpeed[MOTOR_COUNT]; // camera
       for (int i = 0; i < MOTOR_COUNT; ++i)
       {
         digitalWriteFast(dirPins[i], ((1 << i) & sharedDataPtr->motorDirection) ? HIGH : LOW);
+
         int64_t prevSpeed = speed[i];
         speed[i] = sharedDataPtr->nextSpeed[i];
 
@@ -207,8 +226,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
               accum = -accum;
             sharedDataPtr->accum[i] = accum;
             int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-            if (before != after)
-              digitalWriteFast(stepPins[i], after ? HIGH : LOW);
+            // send a 3-5us pulse only on 0->1 transition
+            if (before == 0 && after == 1) {
+              digitalWriteFast(stepPins[i], HIGH);
+              delayMicroseconds(3);
+              digitalWriteFast(stepPins[i], LOW);
+            }
           }
         }
       }
@@ -220,8 +243,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       int32_t before = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
       sharedDataPtr->accum[i] += speed[i];
       int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-      if (before != after)
-        digitalWriteFast(stepPins[i], after ? HIGH : LOW);
+      // send a 3-5us pulse only on 0->1 transition
+      if (before == 0 && after == 1) {
+        digitalWriteFast(stepPins[i], HIGH);
+        delayMicroseconds(3);
+        digitalWriteFast(stepPins[i], LOW);
+      }
     }
 
     uint8_t nextCameraPosition;
