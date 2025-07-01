@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "dmc",
+			"path": "Arc Motion Control/dmc"
+		}
+	],
+	"settings": {}
+}
