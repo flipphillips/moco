@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scen:scene xmlns:scen="https://www.dragonframe.com/scene/" fileVersion="5" videoCompressionLevel="88" stereoExposureL="1" stereoExposureR="1" xsheetShowWave="true" focusExposurePreviewOffset="- 3">
+  <scen:notepad>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Courier 10 Pitch'; font-size:11px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</scen:notepad>
+  <scen:pass name="X1" color="-13092808" automatic="true"/>
+  <scen:axis name="AX1" integral="false" base="0" connectionType="1" connectionChannel="1" indexCount="1" stepsPerUnit="1" pulseRate="1000" acceleration="2" frameToFrameSpeed="8" runMaxVelocity="2000" runMaxAcceleration="1000" viewPosition="10" graphColor="-48806" graphSolo="false" graphHide="false">
+    <scen:ghostNodes color="0" strokeWidth="0" tickCount="0" tickColor="0" tickStrokeWidth="0" tickPlayback="false" tickPlaybackSync="false" tickPlaybackFrame="0" smooth="false" closed="false" pencil="false" opacity="0" userData="0"/>
+    <scen:adjustmentLayerLevels light="0" showBadge="false" locationX="0" locationY="0" expanded="false">
+      <scen:keyframes frame="1" level="1" smooth="0" smoothLeft="0" smoothRight="0"/>
+    </scen:adjustmentLayerLevels>
+  </scen:axis>
+  <scen:virtualConfiguration type="0" flags="0">
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+    <scen:axis>-1</scen:axis>
+  </scen:virtualConfiguration>
+  <scen:xnote name="NOTES"/>
+  <scen:edl/>
+  <scen:layer name="testm / 001 / 01" layerFile="__SCENE__" layerFileRelative="__SCENE__" exposure="0" scale="0.10000000000000001" offsetX="0" offsetY="0" frameOffset="0" footageRate="0" holdFrames="0" layerOpacity="100" chromaTolerance="0" winX="0" winY="0" winWidth="0" winHeight="0" markIn="0" markOut="0" refMarkIn="0" refMarkOut="0"/>
+  <scen:camera viewOffsetX="0" viewOffsetY="0" aspectMask="1.7777777777777777" aspectMaskOpacity="0.5" aspectMaskShow="false" aspectMaskOutline="false" aspectMaskCrosshairs="false" aspectMaskText="false" aspectMaskSafeHorizontal="0" aspectMaskSafeVertical="0">
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:focusCheckPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  </scen:camera>
+  <scen:camera viewOffsetX="0" viewOffsetY="0">
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:focusCheckPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  </scen:camera>
+  <scen:camera viewOffsetX="0" viewOffsetY="0">
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:focusCheckPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  </scen:camera>
+  <scen:camera viewOffsetX="0" viewOffsetY="0">
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:focusCheckPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  </scen:camera>
+  <scen:camera viewOffsetX="0" viewOffsetY="0">
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:focusCheckPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  </scen:camera>
+  <scen:camera viewOffsetX="0" viewOffsetY="0">
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:focusCheckPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  </scen:camera>
+  <scen:camera viewOffsetX="0" viewOffsetY="0">
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:focusCheckPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  </scen:camera>
+  <scen:camera viewOffsetX="0" viewOffsetY="0">
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+    <scen:focusCheckPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  </scen:camera>
+  <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  <scen:liveViewZoomPosition x="0" y="0" viewOffsetX="0" viewOffsetY="0"/>
+  <scen:stereoSetup leftEyeDominant="true" underslung="false"/>
+  <scen:dmx3Setup soundLevel="0" liveViewX="0" liveViewY="0" liveViewWidth="0">
+    <scen:programs name="Global" viewPosition="20"/>
+    <scen:programs name="Bash" bash="true" viewPosition="10"/>
+    <scen:programs name="Program" parent="0" exposure="0" viewPosition="10"/>
+    <scen:triggerOutputs id="0" uni="0" event="OFF"/>
+    <scen:triggerOutputs id="1" uni="0" event="OFF"/>
+    <scen:triggerOutputs id="2" uni="0" event="OFF"/>
+    <scen:triggerOutputs id="0" uni="1" event="OFF"/>
+    <scen:triggerOutputs id="1" uni="1" event="OFF"/>
+    <scen:triggerOutputs id="2" uni="1" event="OFF"/>
+    <scen:triggerOutputs id="0" uni="2" event="OFF"/>
+    <scen:triggerOutputs id="1" uni="2" event="OFF"/>
+    <scen:triggerOutputs id="2" uni="2" event="OFF"/>
+    <scen:triggerOutputs id="0" uni="3" event="OFF"/>
+    <scen:triggerOutputs id="1" uni="3" event="OFF"/>
+    <scen:triggerOutputs id="2" uni="3" event="OFF"/>
+    <scen:triggerInputs id="0" uni="0" event="OFF"/>
+    <scen:triggerInputs id="0" uni="1" event="OFF"/>
+    <scen:triggerInputs id="0" uni="2" event="OFF"/>
+    <scen:triggerInputs id="0" uni="3" event="OFF"/>
+  </scen:dmx3Setup>
+  <scen:mocoSetup gomoEnabled="false">
+    <scen:connections id="7448" type="dmc-lite" port="Giga - 004E00353033510C34323437 (ttyACM0)" required="false" dmx="true" triggers="true" arcMocoNumber="0"/>
+  </scen:mocoSetup>
+  <scen:drawing layerName="Drawing"/>
+  <scen:xsheetDrawing layerName="Drawing"/>
+  <scen:xsheetColumn type="0" subType="0" subTypeChild="0" columnWidth="48"/>
+  <scen:xsheetColumn type="1" subType="0" subTypeChild="0" columnWidth="100"/>
+  <scen:xsheetColumn type="5" subType="0" subTypeChild="0" columnWidth="220"/>
+  <scen:faceSet file="/opt/dragonframe2025/share/Resources/Face Sets/Dr. Sock.psd" imgSize="0">
+    <scen:badges shapeName=" " locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MB" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_01" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_02" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_03" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_04" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_05" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_06" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_07" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_08" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_09" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_10" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_11" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="M_12" locationX="-1" locationY="-1"/>
+  </scen:faceSet>
+  <scen:faceSet file="/opt/dragonframe2025/share/Resources/Face Sets/MOUTH SHAPES.psd" imgSize="0">
+    <scen:badges shapeName=" " locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA01" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA02" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA03" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA04" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA05" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA06" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA07" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA08" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA09" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA10" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA11" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA12" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MA13" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT01" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT02" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT03" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT04" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT05" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT06" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT07" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT08" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT09" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT10" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT11" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT12" locationX="-1" locationY="-1"/>
+    <scen:badges shapeName="MT13" locationX="-1" locationY="-1"/>
+  </scen:faceSet>
+  <scen:zebra/>
+  <scen:zebra/>
+  <scen:zebra/>
+  <scen:zebra/>
+</scen:scene>

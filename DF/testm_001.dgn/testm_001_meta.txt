@@ -1,0 +1,22 @@
+testm_001
+
+--------------------------------------------------------------------------------
+Take_01
+
+    CAMERA: 
+    CAMERA OPERATOR: ---
+    ANIMATOR: ---
+    FRAMES: ---
+    FIRST FRAME: 2025-07-03 13:24:43
+    LAST FRAME:  2025-07-03 13:24:43
+
+Exposures
+
+    X1    
+
+
+Frame Notes
+
+    ---
+
+

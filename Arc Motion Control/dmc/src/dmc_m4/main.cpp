@@ -251,7 +251,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if (htim->Instance == TIM1)
   {
     #ifdef HWDEBUG
-    //TOGGLE_PIN(GPIOE, 5); // toggle test pin once per ISR call - E5 = D51
+    TOGGLE_PIN(GPIOE, 5); // toggle test pin once per ISR call - E5 = D51
     #endif
 
     //
