@@ -84,3 +84,85 @@ There are strange keybinding problems with VSCode here in the Linux-verse.
 - I went to Google and MS Copilot and asked about the problem. 
 - It told me that it was NOT POSSIBLE.
 - ChatGPT NEVER CHECKED.
+
+## Algorithm Explainer
+
+1. Accumulator Structure
+
+The accumulator (accum[i]) is a 64-bit fixed-point value:
+
+| Bits        | Purpose             |
+|-------------|---------------------|
+| 63 ... 32   | Integer position    |
+| 31 ... 0    | Fractional position |
+
+Each cycle, `speed[i]` (a fixed-point increment) is added to `accum[i]`, smoothly advancing the position.
+
+2. Bit Detection Pattern
+
+The key expression:
+
+```text
+((accum[i] >> 31) ^ (accum[i] >> 30)) & 0x1
+```
+
+- Extracts bits 31 and 30 (the two highest bits of the 32-bit fractional part).
+- XORs them to create a quadrature-like signal.
+- This bit toggles as the accumulator crosses quarter and half-step boundaries.
+
+
+3. Timing Diagram
+Below is a conceptual timing diagram showing how the accumulator and bit pattern interact to generate step pulses:
+
+```text
+Accumulator Value (Fractional bits 31...0):
+|----|----|----|----|----|----|----|----|
+0x00000000                       0xFFFFFFFF
+
+Bit 31:  |0...............|1...............|
+Bit 30:  |00......|11......|00......|11....|
+XOR:     |0|1|0|1|0|1|0|1|0|1|0|1|0|1|0|1|
+
+Step Pulse Output:
+        __    __    __    __
+_______|  |__|  |__|  |__|  |____
+    (output toggles on XOR change)
+```
+
+As the accumulator increments, bits 31 and 30 toggle at different rates.
+
+The XOR pattern changes state every time the accumulator crosses a quarter of its range.
+
+The algorithm detects this change and toggles the step pin, creating a precise step pulse.
+
+4. How This Relates to Bresenham
+
+Like Bresenham’s algorithm, this method uses integer math and an accumulator to decide when to "step."
+
+The accumulator’s overflow (or bit pattern change) triggers the next action, ensuring accurate, evenly spaced pulses.
+
+5. Key Advantages
+
+No floating-point math: Efficient for microcontrollers.
+
+Smooth, high-resolution stepping: Sub-step accuracy.
+
+Consistent timing: Independent of step rate.
+
+Handles direction changes: Works for both positive and negative speeds.
+
+## Pulse Math
+
+The timer math works like this - 
+
+```c
+TIMER_TICK_HZ: 4000000
+TIMER_TICK_NS: 250.00
+ISR_RATE_HZ: 200000
+ISR_PERIOD_US: 5.00
+TIMER_PERIOD: 20
+PULSE_WIDTH_US: 1
+NOP_COUNT: 4
+OUTER_LOOP_TICKS: 10
+SPEED_SCALE: 0
+```

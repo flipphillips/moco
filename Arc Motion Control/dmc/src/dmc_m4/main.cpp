@@ -214,7 +214,7 @@ void loop()
 {
   while (1)
   {
-    #ifdef DEBUG
+    #if 0
     // while (debugTail != debugHead) {
     //   DebugMsg msg = *((DebugMsg*)&debugBuffer[debugTail]);
     //   debugTail = (debugTail + 1) % DEBUG_BUF_SIZE;
@@ -231,7 +231,7 @@ void loop()
     DEBUG_SERIAL.println(speedToStepsPerSecond(sharedDataPtr->nextSpeed[0]));
     #endif // DEBUG
 
-    delay(100);
+    // delay(100);
   }
 }
 
@@ -329,15 +329,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       int32_t before = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
       sharedDataPtr->accum[i] += speed[i];
       int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-      // send a PULSE_WIDTH_US pulse only on 0->1 transition
-      if (before == 0 && after == 1) {
+
+      // Detect rising edge
+      if (!before && after) {
         #ifdef HWDEBUG
         TOGGLE_PIN(GPIOE, 5); // toggle test pin once per ISR call - E5 = D51
         #endif // HWDEBUG
+        
         #ifdef DEBUG
         enqueueDebug(i, speedToStepsPerSecond(speed[i]), micros());
         #endif // DEBUG
-        
+
         digitalWriteFast(stepPins[i], HIGH);
 
         // NOP-based delay loop to approximate PULSE_WIDTH_US duration
@@ -347,15 +349,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         }
         
         digitalWriteFast(stepPins[i], LOW);
-
-      }
-      else if (before == 1 && after == 0) {
-        // This is a 1->0 transition, we don't do anything here
-        // but we could if we wanted to
-      }
-      else {
-        // This is a no-op, we don't do anything here
-        // but we could if we wanted to     
       }
     }
 

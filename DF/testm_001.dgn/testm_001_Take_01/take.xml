@@ -9,7 +9,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Courier 10 Pitch'; font-size:11px; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</scen:notepad>
   <scen:pass name="X1" color="-13092808" automatic="true"/>
-  <scen:axis name="AX1" integral="false" base="0" connectionType="1" connectionChannel="1" indexCount="1" stepsPerUnit="1" pulseRate="1000" acceleration="2" frameToFrameSpeed="8" runMaxVelocity="2000" runMaxAcceleration="1000" viewPosition="10" graphColor="-48806" graphSolo="false" graphHide="false">
+  <scen:axis name="AX1" integral="false" base="0" currentPosition="29" connectionType="1" connectionChannel="1" indexCount="1" stepsPerUnit="1" pulseRate="1000" acceleration="2" frameToFrameSpeed="8" runMaxVelocity="2000" runMaxAcceleration="1000" viewPosition="10" graphColor="-48806" graphSolo="false" graphHide="false">
+    <scen:points x="1" y="29" type="1"/>
+    <scen:points x="47" y="76" type="1"/>
+    <scen:controlPoints x="18.48" y="29"/>
+    <scen:controlPoints x="29.52" y="76"/>
     <scen:ghostNodes color="0" strokeWidth="0" tickCount="0" tickColor="0" tickStrokeWidth="0" tickPlayback="false" tickPlaybackSync="false" tickPlaybackFrame="0" smooth="false" closed="false" pencil="false" opacity="0" userData="0"/>
     <scen:adjustmentLayerLevels light="0" showBadge="false" locationX="0" locationY="0" expanded="false">
       <scen:keyframes frame="1" level="1" smooth="0" smoothLeft="0" smoothRight="0"/>
