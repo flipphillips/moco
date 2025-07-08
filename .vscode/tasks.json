@@ -1,0 +1,28 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "PIO Monitor M7 (Custom Port)",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-c",
+				"source ~/.platformio/penv/bin/activate && pio device monitor -e giga_r1_m7 --port /dev/ttyUSB0"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/Arc Motion Control/dmc"
+			},
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new",
+				"showReuseMessage": false,
+				"clear": false
+			}
+		}
+	]
+}

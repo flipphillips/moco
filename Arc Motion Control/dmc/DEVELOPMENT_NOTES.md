@@ -49,3 +49,38 @@ void setup() {
 
 ## Git History
 This configuration was established on July 3, 2025, after troubleshooting port configuration issues across different development platforms.
+
+## Keybinding Chaos
+
+There are strange keybinding problems with VSCode here in the Linux-verse. 
+
+```json
+[
+	{
+        "key": "f10",
+		"command": "workbench.action.terminal.newWithCwd",
+		"args": {
+			"cwd": "${workspaceFolder}/Arc Motion Control/dmc"
+		}
+	},
+	{
+        "key": "f9",
+		"command": "workbench.action.terminal.sendSequence",
+		"args": {
+			"text": "source ~/.platformio/penv/bin/activate && pio device monitor -e giga_r1_m7 --port /dev/ttyUSB0\n"
+		}
+	}
+]
+```
+
+### ON WASTING TIME WITH GENERATIVE AI
+
+- I spent _two hours_ trying to track the above down with ChatGPT. 
+- We failed to ever get anything working. 
+- It kept trying to solve the massive big picture here instead of breaking the task down.
+- _It refused to fail_
+- I had to keep guiding it back to the basic problem, simple examples, etc.
+- After two hours I became frustrated and gave up.
+- I went to Google and MS Copilot and asked about the problem. 
+- It told me that it was NOT POSSIBLE.
+- ChatGPT NEVER CHECKED.

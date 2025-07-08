@@ -8,5 +8,7 @@
 			"path": "Arc Motion Control/dmc"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"terminal.integrated.cwd": "${workspaceFolder}/Arc Motion Control/dmc"
+	}
 }
