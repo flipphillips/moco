@@ -73,9 +73,11 @@
 // Important: The STM32 Cores have a 480MHz clock for the M4 core but the TIM1 timer, which we are using, runs at 240Mhz - it's on a APB bus that doubles the timer clock when it is prescaled. THIS IS A FUNCKING BIG DEAL!
 
 #ifdef ARDUINO_ARCH_MBED_GIGA
+    constexpr uint32_t CPU_CORE_FREQ_HZ = 480'000'000; // M4 core clock
     constexpr uint32_t CPU_FREQ_HZ = 240'000'000;   // TIM1 actual clock
     constexpr uint32_t TIMER_PRESCALER = 59;        // 240 MHz / (59+1) = 4 MHz
 #elif defined(ARDUINO_ARCH_MBED_PORTENTA)
+    constexpr uint32_t CPU_CORE_FREQ_HZ = 400'000'000; // M4 core clock (guess)
     constexpr uint32_t CPU_FREQ_HZ = 400'000'000;   // System clock (Portenta H7 M4) No idea about TIM1 scaling here, but guessing  it's similar
     constexpr uint32_t TIMER_PRESCALER = 49;       // 400 MHz / (49+1)  = 8 MHz
 #endif
@@ -87,8 +89,13 @@ constexpr uint32_t ISR_RATE_HZ = 200'000;       // ISR frequency (every 5 µs)
 constexpr double ISR_PERIOD_US = 1e6 / ISR_RATE_HZ;  // 5 µs
 constexpr uint32_t TIMER_PERIOD = static_cast<uint32_t>(TIMER_TICK_HZ / ISR_RATE_HZ); // 20 ticks
 
-constexpr uint32_t PULSE_WIDTH_US = 200; // Override with -DPULSE_WIDTH_US=<value>
-constexpr uint32_t NOP_COUNT = static_cast<uint32_t>((PULSE_WIDTH_US * 1000) / TIMER_TICK_NS); // for pulse delay loop
+constexpr uint32_t PULSE_WIDTH_US = 1; // Override with -DPULSE_WIDTH_US=<value>
+
+// Assuming a 'for' loop with a nop inside takes ~4 clock cycles per iteration.
+// This is a rough approximation and can be tuned.
+constexpr uint32_t CYCLES_PER_NOP_LOOP = 4;
+constexpr uint32_t NOP_COUNT = (PULSE_WIDTH_US * (CPU_CORE_FREQ_HZ / 1'000'000)) / CYCLES_PER_NOP_LOOP;
+
 
 // Outer loop tick: number of ISR cycles per outer loop tick
 constexpr uint32_t OUTER_LOOP_TICKS = 10; // Adjustable: number of ISR cycles per outer loop tick

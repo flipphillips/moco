@@ -1759,7 +1759,7 @@ int32_t updateMotorVelocities()
   for (m = 0; m < MOTOR_CAM_COUNT; ++m)
   {
     motor = &motors[m];
-    int64_t speed = (int64_t)(roundf(motor->currentVelocity * 21474.83648f));
+    int64_t speed = (int64_t)(roundf(motor->currentVelocity * 2147483.648f));
     sharedData->nextSpeed[m] = speed;
 
     if (motor->config & (DMC_MOTOR_CONFIG_COUPLE | DMC_MOTOR_CONFIG_COUPLE_R))
