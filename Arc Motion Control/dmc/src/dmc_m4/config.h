@@ -6,6 +6,9 @@
  *
  */
 
+// Invert step pulse logic for open collector/drain, negative pulse, or ground pulse interfaces
+#define INVERT_STEP_PULSE true
+
 #ifdef ARDUINO_ARCH_MBED_GIGA
 
 #define PIN_STEP1 22
@@ -84,7 +87,7 @@ constexpr uint32_t ISR_RATE_HZ = 200'000;       // ISR frequency (every 5 µs)
 constexpr double ISR_PERIOD_US = 1e6 / ISR_RATE_HZ;  // 5 µs
 constexpr uint32_t TIMER_PERIOD = static_cast<uint32_t>(TIMER_TICK_HZ / ISR_RATE_HZ); // 20 ticks
 
-constexpr uint32_t PULSE_WIDTH_US = 20; // Override with -DPULSE_WIDTH_US=<value>
+constexpr uint32_t PULSE_WIDTH_US = 200; // Override with -DPULSE_WIDTH_US=<value>
 constexpr uint32_t NOP_COUNT = static_cast<uint32_t>((PULSE_WIDTH_US * 1000) / TIMER_TICK_NS); // for pulse delay loop
 
 // Outer loop tick: number of ISR cycles per outer loop tick

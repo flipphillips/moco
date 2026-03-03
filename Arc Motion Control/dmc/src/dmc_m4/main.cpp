@@ -158,7 +158,7 @@ void setup()
     int stepPin = stepPins[i];
     int dirPin = dirPins[i];
     pinMode(stepPin, OUTPUT);
-    digitalWrite(stepPin, LOW);
+   digitalWrite(stepPin, INVERT_STEP_PULSE ? HIGH : LOW);
 
     pinMode(dirPin, OUTPUT);
     digitalWrite(dirPin, LOW);
@@ -314,7 +314,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             
             // I belive this is sort of a 'safety off' thing.
             if (before != after)
-              digitalWriteFast(stepPins[i], after ? HIGH : LOW);
+              digitalWriteFast(stepPins[i], after ? (INVERT_STEP_PULSE ? LOW : HIGH) : (INVERT_STEP_PULSE ? HIGH : LOW));
           }
         }
       }
@@ -340,7 +340,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         enqueueDebug(i, speedToStepsPerSecond(speed[i]), micros());
         #endif // DEBUG
 
-        digitalWriteFast(stepPins[i], HIGH);
+        digitalWriteFast(stepPins[i], INVERT_STEP_PULSE ? LOW : HIGH);
 
         // NOP-based delay loop to approximate PULSE_WIDTH_US duration
         // Avoids using delayMicroseconds() inside ISR
@@ -348,7 +348,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
           __asm__ __volatile__("nop");
         }
         
-        digitalWriteFast(stepPins[i], LOW);
+        digitalWriteFast(stepPins[i], INVERT_STEP_PULSE ? HIGH : LOW);
       }
     }
 
