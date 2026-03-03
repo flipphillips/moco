@@ -1,4 +1,4 @@
-/*
+352/*
  * dmc_m7.ino
  * dmc-lite source code
  * Copyright 2023 by DZED Systems LLC
@@ -143,6 +143,19 @@ int8_t logicSwitchInput()
 #endif
 }
 
+int8_t killSwitchInput()
+{
+#ifdef KILL_SWITCH_PIN
+#ifdef KILL_SWITCH_NORMALLY_CLOSED
+  return digitalRead(KILL_SWITCH_PIN);
+#else
+  return !digitalRead(KILL_SWITCH_PIN);
+#endif
+#else
+  return 0;
+#endif
+}
+
 void setCamera(uint8_t val)
 {
   sharedData->cameraValue = val;
@@ -179,10 +192,8 @@ void setup()
 
 #ifdef KILL_SWITCH_PIN
   pinMode(KILL_SWITCH_PIN, INPUT_PULLUP);
-  killSwitchState = !digitalRead(KILL_SWITCH_PIN);
-#else
-  killSwitchState = 0;
 #endif
+  killSwitchState = killSwitchInput();
 
   RPC.begin();
 
@@ -281,14 +292,12 @@ void loop()
       --usbLedCounter;
     }
 
-#ifdef KILL_SWITCH_PIN
-    eStopOn = !digitalRead(KILL_SWITCH_PIN);
+    eStopOn = killSwitchInput();
     if (eStopOn != killSwitchState)
     {
       killSwitchState = eStopOn;
       digitalWrite(LEDR, killSwitchState ? LOW : HIGH);
     }
-#endif
 
     if (logicSwitchInput())
     {
@@ -1759,7 +1768,7 @@ int32_t updateMotorVelocities()
   for (m = 0; m < MOTOR_CAM_COUNT; ++m)
   {
     motor = &motors[m];
-    int64_t speed = (int64_t)(roundf(motor->currentVelocity * 2147483.648f));
+    int64_t speed = (int64_t)(roundf(motor->currentVelocity * 21474.83648f));
     sharedData->nextSpeed[m] = speed;
 
     if (motor->config & (DMC_MOTOR_CONFIG_COUPLE | DMC_MOTOR_CONFIG_COUPLE_R))

@@ -143,19 +143,6 @@ int8_t logicSwitchInput()
 #endif
 }
 
-int8_t killSwitchInput()
-{
-#ifdef KILL_SWITCH_PIN
-#ifdef KILL_SWITCH_NORMALLY_CLOSED
-  return digitalRead(KILL_SWITCH_PIN);
-#else
-  return !digitalRead(KILL_SWITCH_PIN);
-#endif
-#else
-  return 0;
-#endif
-}
-
 void setCamera(uint8_t val)
 {
   sharedData->cameraValue = val;
@@ -192,8 +179,10 @@ void setup()
 
 #ifdef KILL_SWITCH_PIN
   pinMode(KILL_SWITCH_PIN, INPUT_PULLUP);
+  killSwitchState = !digitalRead(KILL_SWITCH_PIN);
+#else
+  killSwitchState = 0;
 #endif
-  killSwitchState = killSwitchInput();
 
   RPC.begin();
 
@@ -292,12 +281,14 @@ void loop()
       --usbLedCounter;
     }
 
-    eStopOn = killSwitchInput();
+#ifdef KILL_SWITCH_PIN
+    eStopOn = !digitalRead(KILL_SWITCH_PIN);
     if (eStopOn != killSwitchState)
     {
       killSwitchState = eStopOn;
       digitalWrite(LEDR, killSwitchState ? LOW : HIGH);
     }
+#endif
 
     if (logicSwitchInput())
     {
