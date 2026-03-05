@@ -1,4 +1,4 @@
-352/*
+/*
  * dmc_m7.ino
  * dmc-lite source code
  * Copyright 2023 by DZED Systems LLC
@@ -17,6 +17,28 @@
 #ifdef CORE_CM4
 #error "Make sure to target the Main core with flash split 1.5MB M7 + 0.5MB M4"
 #endif
+
+#if defined(DEBUG)
+volatile uint8_t debugHead = 0;
+volatile uint8_t debugTail = 0;
+const int DEBUG_BUF_SIZE = 64;
+struct DebugMsg {
+  uint8_t motor;
+  int64_t speed;
+  uint32_t timestamp;
+};
+volatile DebugMsg debugBuffer[DEBUG_BUF_SIZE];
+
+void enqueueDebug(uint8_t motor, int64_t spd, uint32_t timestamp) {
+  uint8_t nextHead = (debugHead + 1) % DEBUG_BUF_SIZE;
+  if (nextHead != debugTail) {
+    debugBuffer[debugHead].motor = motor;
+    debugBuffer[debugHead].speed = spd;
+    debugBuffer[debugHead].timestamp = timestamp;
+    debugHead = nextHead;
+  }
+}
+#endif // DEBUG
 
 int killSwitchState;
 
@@ -284,6 +306,21 @@ void loop()
   int eStopOn = 0;
 
   transmitMessages();
+
+#ifdef DEBUG
+  static unsigned long lastDebugTime = 0;
+  if (millis() - lastDebugTime > 250) { // Print every 250ms
+    lastDebugTime = millis();
+    if(sharedData) {
+        DEBUG_SERIAL.print("M7 speeds: ");
+        for (int i=0; i<MOTOR_COUNT; ++i) {
+            DEBUG_SERIAL.print((long long)sharedData->nextSpeed[i]);
+            DEBUG_SERIAL.print(" ");
+        }
+        DEBUG_SERIAL.println();
+    }
+  }
+#endif
 
   if (updatedVelocities)
   {

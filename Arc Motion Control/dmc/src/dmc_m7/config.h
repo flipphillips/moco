@@ -6,6 +6,21 @@
  *
  */
 
+#define DEBUG
+
+
+#define HWDEBUG
+#undef HWDEBUG
+
+#ifdef HWDEBUG
+#define PIN_TEST D40
+#define TOGGLE_PIN(PORT, PIN) (PORT->ODR ^= (1 << PIN))
+#endif // HWDEBUG
+
+#if defined(DEBUG)
+#define DEBUG_SERIAL Serial
+#endif // DEBUG
+
 #ifdef ARDUINO_ARCH_MBED_GIGA
 
 #define LOGIC_OUT_0 D40

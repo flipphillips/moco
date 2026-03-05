@@ -3,6 +3,10 @@
  * dmc-lite source code
  * Copyright 2023 by DZED Systems LLC
  *
+ * Pulse width mods -
+ * Copyright 2025 by Flip Philips
+ * RITMPS
+ * 
  * Target core: M4 Co-processor
  * Flash split: 1.5MB M7 + 0.5MB M4
  */
@@ -15,6 +19,14 @@
 #define CAMERA_OFF 0x0
 #define CAMERA_SHUTTER 0x1
 #define CAMERA_METER 0x2
+
+#define HWDEBUG
+
+#ifdef HWDEBUG
+#define PIN_TEST D51
+#define TOGGLE_PIN(PORT, PIN) (PORT->ODR ^= (1 << PIN))
+#endif // HWDEBUG
+
 
 #ifdef CORE_CM7
 #error "Make sure to target the M4 Co-processor with flash split 1.5MB M7 + 0.5MB M4"
@@ -73,6 +85,15 @@ TIM_HandleTypeDef htim1;
 static const int stepPins[] = { PIN_STEP1, PIN_STEP2, PIN_STEP3, PIN_STEP4, PIN_STEP5, PIN_STEP6, PIN_STEP7, PIN_STEP8 };
 static const int dirPins[] = { PIN_DIR1, PIN_DIR2, PIN_DIR3, PIN_DIR4, PIN_DIR5, PIN_DIR6, PIN_DIR7, PIN_DIR8 };
 
+inline int64_t stepsPerSecondToSpeed(double stepsPerSec) {
+    return static_cast<int64_t>(stepsPerSec * SPEED_SCALE / ISR_RATE_HZ);
+}
+
+inline double speedToStepsPerSecond(int64_t speed) {
+    return static_cast<double>(speed) * ISR_RATE_HZ / SPEED_SCALE;
+}
+
+
 void setup()
 {
   RPC.begin();
@@ -106,7 +127,7 @@ void setup()
     int stepPin = stepPins[i];
     int dirPin = dirPins[i];
     pinMode(stepPin, OUTPUT);
-    digitalWrite(stepPin, LOW);
+    digitalWrite(stepPin, INVERT_STEP_PULSE ? HIGH : LOW);
 
     pinMode(dirPin, OUTPUT);
     digitalWrite(dirPin, LOW);
@@ -120,26 +141,32 @@ void setup()
   pinMode(PIN_CAM_SHUTTER, OUTPUT);
   digitalWrite(PIN_CAM_SHUTTER, LOW);
 
-  // 200 kHz
+  // Timer setup - see constants in config.h
   htim1.Instance = TIM1;
-#if defined(ARDUINO_ARCH_MBED_PORTENTA)
-  htim1.Init.Prescaler = 49; // H7 seems to default to 400 MHz
-#else
-  htim1.Init.Prescaler = 59; // Giga R1 runs at 480 MHz
-#endif
-  htim1.Init.Period = 19;
+  htim1.Init.Prescaler = TIMER_PRESCALER;
+  htim1.Init.Period = TIMER_PERIOD - 1; // 20 ticks at 4 MHz
   __HAL_RCC_TIM1_CLK_ENABLE();
   HAL_NVIC_SetPriority(TIM1_UP_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
   HAL_TIM_Base_Init(&htim1);
   HAL_TIM_Base_Start_IT(&htim1);
+
+  // debuggery
+  #ifdef HWDEBUG
+  pinMode(PIN_TEST, OUTPUT);
+  digitalWrite(PIN_TEST, LOW);  
+  #endif // HWDEBUG
+
+  
 }
 
 void loop()
 {
   while (1)
   {
-    delay(1000);
+    
+
+    
   }
 }
 
@@ -158,7 +185,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM1)
   {
-    if (++counter == 4000)
+    #ifdef HWDEBUG
+    TOGGLE_PIN(GPIOE, 5); // toggle test pin once per ISR call - E5 = D51
+    #endif
+
+    if (++counter == OUTER_LOOP_TICKS)
     {
       ++ledCounter;
       if (ledCounter == 90)
@@ -206,7 +237,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             sharedDataPtr->accum[i] = accum;
             int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
             if (before != after)
-              digitalWriteFast(stepPins[i], after ? HIGH : LOW);
+              digitalWriteFast(stepPins[i], after ? (INVERT_STEP_PULSE ? LOW : HIGH) : (INVERT_STEP_PULSE ? HIGH : LOW));
           }
         }
       }
@@ -218,8 +249,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       int32_t before = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
       sharedDataPtr->accum[i] += speed[i];
       int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-      if (before != after)
-        digitalWriteFast(stepPins[i], after ? HIGH : LOW);
+      if (!before && after) {
+        #ifdef HWDEBUG
+        TOGGLE_PIN(GPIOE, 5); // toggle test pin once per ISR call - E5 = D51
+        #endif // HWDEBUG
+        
+        digitalWriteFast(stepPins[i], INVERT_STEP_PULSE ? LOW : HIGH);
+
+        // NOP-based delay loop to approximate PULSE_WIDTH_US duration
+        // Avoids using delayMicroseconds() inside ISR
+        for (volatile uint32_t d = 0; d < NOP_COUNT; ++d) {
+          __asm__ __volatile__("nop");
+        }
+        
+        digitalWriteFast(stepPins[i], INVERT_STEP_PULSE ? HIGH : LOW);
+      }
     }
 
     uint8_t nextCameraPosition;
