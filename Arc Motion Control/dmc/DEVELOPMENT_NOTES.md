@@ -1,19 +1,15 @@
 # Development Notes - DMC Project
 
-## Crucial Stuff
+## System Status & Current Goals
 
-* The directory `dmcDIST` has the default (and pretty much functional) Dragonframe code. 
-* This code should act as reference for everyting in the `src` directory.
-* It should not be modified.
+* The directory `dmcDIST` has the default (and pretty much functional) Dragonframe code. This code should act as reference for everyting in the `src` directory.
 * The minimal changes we're working on:
-	* We want to change the system to 'pull down' instead of up.
+	* We want to change the system to 'pull down' instead of up to support the Kuper motion control cards.
 	* We want to add some hardware and software debugging. Mostly hardware in m4 and software in m7 due to timing.
-	* We'd like to change the pulse widths that are present in the `dmcDIST`.
-	* THIS IS PRESENTLY BROKEN - Bursts of pulses come out instead of well spaced ones. 
-	* I suspect the `nop` loop but might be red-herring.
-* Going forward:
-	* Let's get the pulse trains corrected by reverting as close as possible to `dmcDIST` for the pulse algorithm and timing.
-	* Let's add in the debugging (it doesn't seem to be working presently).
+* **FIXED (2026-03-05):** The "bursty" pulse train issue has been resolved.
+	* The cause was a combination of a custom `nop`-based pulse-width loop and an incorrect `OUTER_LOOP_TICKS` value in the M4 code.
+	* The fix involved reverting the pulse generation algorithm and timing constants in `src/dmc_m4/` to match the simpler, more stable implementation from the `dmcDIST` reference code.
+* **Hardware Driver Info:** The system is driving Centent CNO-145/162 motors via a Kuper card, which has an open-collector TTL-level interface. We are using 74xxxx125 buffers. The Kuper card triggers on a falling (5V -> GND) edge. The code now supports this via `INVERT_STEP_PULSE = true`.
 
 *** The reset of this document is more 'background' than imperative stuff, consult but don't take as gospel, esp re: timing, etc ***
 
@@ -57,7 +53,7 @@ pio device monitor -e giga_r1_m7
 ```
 
 ### Code Configuration
-In your Arduino code, use `Serial1` for UART communication:
+In  Arduino code, use `Serial1` for UART communication:
 ```cpp
 void setup() {
   Serial1.begin(115200);  // UART adapter communication
@@ -141,12 +137,6 @@ The XOR pattern changes state every time the accumulator crosses a quarter of it
 
 The algorithm detects this change and toggles the step pin, creating a precise step pulse.
 
-4. How This Relates to Bresenham
-
-Like Bresenham’s algorithm, this method uses integer math and an accumulator to decide when to "step."
-
-The accumulator’s overflow (or bit pattern change) triggers the next action, ensuring accurate, evenly spaced pulses.
-
 5. Key Advantages
 
 No floating-point math: Efficient for microcontrollers.
@@ -156,21 +146,3 @@ Smooth, high-resolution stepping: Sub-step accuracy.
 Consistent timing: Independent of step rate.
 
 Handles direction changes: Works for both positive and negative speeds.
-
-## Pulse Math
-
-The timer math works like this - 
-
-```c
-TIMER_TICK_HZ: 4000000
-TIMER_TICK_NS: 250.00
-ISR_RATE_HZ: 200000
-ISR_PERIOD_US: 5.00
-TIMER_PERIOD: 20
-PULSE_WIDTH_US: 1
-NOP_COUNT: 4
-OUTER_LOOP_TICKS: 10
-SPEED_SCALE: 0
-```
-
-BUT THIS MAY BE INCORRECT. There are timing problems.

@@ -191,6 +191,7 @@ void setup()
   memset(sharedData, 0, sizeof(DmcSharedData));
 
   Serial.begin(115200);
+  Serial1.begin(115200);
 
   pinMode(LEDR, OUTPUT);
   pinMode(LEDG, OUTPUT);
@@ -291,6 +292,17 @@ void setup()
   sendHello(0);
 
   switchInput = logicSwitchInput();
+
+#if defined(DEBUG)
+  DEBUG_SERIAL.println();
+  DEBUG_SERIAL.println("--- M7 Debug Constants ---");
+  DEBUG_SERIAL.print("DATA_RATE: ");
+  DEBUG_SERIAL.println(DATA_RATE);
+  DEBUG_SERIAL.print("SPEED_SCALE_FACTOR: ");
+  DEBUG_SERIAL.println(21474.83648f, 7);
+  DEBUG_SERIAL.println("--------------------------");
+  DEBUG_SERIAL.println();
+#endif
 }
 
 void loop()
@@ -312,12 +324,60 @@ void loop()
   if (millis() - lastDebugTime > 250) { // Print every 250ms
     lastDebugTime = millis();
     if(sharedData) {
-        DEBUG_SERIAL.print("M7 speeds: ");
-        for (int i=0; i<MOTOR_COUNT; ++i) {
-            DEBUG_SERIAL.print((long long)sharedData->nextSpeed[i]);
-            DEBUG_SERIAL.print(" ");
+        static float lastSpeeds[MOTOR_COUNT] = {0.0f};
+        static uint8_t lastCameraValue = 0;
+        static int lastKillSwitchState = 0;
+        static int8_t lastSwitchInput = 0;
+
+        bool changed = false;
+        for (int i = 0; i < MOTOR_COUNT; ++i) {
+            if (motors[i].currentVelocity != lastSpeeds[i]) {
+                changed = true;
+                break;
+            }
         }
-        DEBUG_SERIAL.println();
+        if (!changed &&
+            sharedData->cameraValue == lastCameraValue &&
+            killSwitchState == lastKillSwitchState &&
+            switchInput == lastSwitchInput) {
+            // everything is the same, do nothing.
+        } else {
+            // something changed, print new state.
+            bool allMotorsOff = true;
+            for (int i = 0; i < MOTOR_COUNT; ++i) {
+                if (motors[i].currentVelocity != 0) {
+                    allMotorsOff = false;
+                    break;
+                }
+            }
+            
+            DEBUG_SERIAL.print("M7 speeds: ");
+            if (allMotorsOff) {
+                DEBUG_SERIAL.print("all off");
+            } else {
+                for (int i=0; i<MOTOR_COUNT; ++i) {
+                    if (motors[i].currentVelocity >= 0) DEBUG_SERIAL.print("+");
+                    DEBUG_SERIAL.print(motors[i].currentVelocity);
+                    DEBUG_SERIAL.print(" ");
+                }
+            }
+
+            DEBUG_SERIAL.print(" | Shutter: ");
+            DEBUG_SERIAL.print(sharedData->cameraValue);
+            DEBUG_SERIAL.print(" | E-Stop: ");
+            DEBUG_SERIAL.print(killSwitchState);
+            DEBUG_SERIAL.print(" | Logic: ");
+            DEBUG_SERIAL.print(switchInput);
+            DEBUG_SERIAL.println();
+
+            // Update last state
+            for (int i = 0; i < MOTOR_COUNT; ++i) {
+                lastSpeeds[i] = motors[i].currentVelocity;
+            }
+            lastCameraValue = sharedData->cameraValue;
+            lastKillSwitchState = killSwitchState;
+            lastSwitchInput = switchInput;
+        }
     }
   }
 #endif

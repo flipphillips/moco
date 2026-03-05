@@ -18,7 +18,7 @@
 #endif // HWDEBUG
 
 #if defined(DEBUG)
-#define DEBUG_SERIAL Serial
+#define DEBUG_SERIAL Serial1
 #endif // DEBUG
 
 #ifdef ARDUINO_ARCH_MBED_GIGA

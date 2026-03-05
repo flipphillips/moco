@@ -3,8 +3,8 @@
  * dmc-lite source code
  * Copyright 2023 by DZED Systems LLC
  *
- * Pulse width mods -
- * Copyright 2025 by Flip Philips
+ * Pulse mods -
+ * Copyright 2025-6 by Flip Philips
  * RITMPS
  * 
  * Target core: M4 Co-processor
