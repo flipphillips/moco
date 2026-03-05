@@ -98,6 +98,6 @@ constexpr uint32_t NOP_COUNT = (PULSE_WIDTH_US * (CPU_CORE_FREQ_HZ / 1'000'000))
 
 
 // Outer loop tick: number of ISR cycles per outer loop tick
-constexpr uint32_t OUTER_LOOP_TICKS = 10; // Adjustable: number of ISR cycles per outer loop tick
+constexpr uint32_t OUTER_LOOP_TICKS = 4000; // Adjustable: number of ISR cycles per outer loop tick
 constexpr uint64_t SPEED_SCALE = 1ULL << 32; // Scale factor for speed calculations (2^32 for 64-bit precision)
 

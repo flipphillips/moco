@@ -1,5 +1,23 @@
 # Development Notes - DMC Project
 
+## Crucial Stuff
+
+* The directory `dmcDIST` has the default (and pretty much functional) Dragonframe code. 
+* This code should act as reference for everyting in the `src` directory.
+* It should not be modified.
+* The minimal changes we're working on:
+	* We want to change the system to 'pull down' instead of up.
+	* We want to add some hardware and software debugging. Mostly hardware in m4 and software in m7 due to timing.
+	* We'd like to change the pulse widths that are present in the `dmcDIST`.
+	* THIS IS PRESENTLY BROKEN - Bursts of pulses come out instead of well spaced ones. 
+	* I suspect the `nop` loop but might be red-herring.
+* Going forward:
+	* Let's get the pulse trains corrected by reverting as close as possible to `dmcDIST` for the pulse algorithm and timing.
+	* Let's add in the debugging (it doesn't seem to be working presently).
+
+*** The reset of this document is more 'background' than imperative stuff, consult but don't take as gospel, esp re: timing, etc ***
+
+
 ## PlatformIO Configuration
 
 ### Port Configuration
@@ -72,18 +90,6 @@ There are strange keybinding problems with VSCode here in the Linux-verse.
 	}
 ]
 ```
-
-### ON WASTING TIME WITH GENERATIVE AI
-
-- I spent _two hours_ trying to track the above down with ChatGPT. 
-- We failed to ever get anything working. 
-- It kept trying to solve the massive big picture here instead of breaking the task down.
-- _It refused to fail_
-- I had to keep guiding it back to the basic problem, simple examples, etc.
-- After two hours I became frustrated and gave up.
-- I went to Google and MS Copilot and asked about the problem. 
-- It told me that it was NOT POSSIBLE.
-- ChatGPT NEVER CHECKED.
 
 ## Algorithm Explainer
 
@@ -166,3 +172,5 @@ NOP_COUNT: 4
 OUTER_LOOP_TICKS: 10
 SPEED_SCALE: 0
 ```
+
+BUT THIS MAY BE INCORRECT. There are timing problems.

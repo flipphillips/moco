@@ -249,20 +249,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       int32_t before = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
       sharedDataPtr->accum[i] += speed[i];
       int32_t after = ((sharedDataPtr->accum[i] >> 31) ^ (sharedDataPtr->accum[i] >> 30)) & 0x1;
-      if (!before && after) {
+      if (before != after) {
         #ifdef HWDEBUG
         TOGGLE_PIN(GPIOE, 5); // toggle test pin once per ISR call - E5 = D51
         #endif // HWDEBUG
-        
-        digitalWriteFast(stepPins[i], INVERT_STEP_PULSE ? LOW : HIGH);
-
-        // NOP-based delay loop to approximate PULSE_WIDTH_US duration
-        // Avoids using delayMicroseconds() inside ISR
-        for (volatile uint32_t d = 0; d < NOP_COUNT; ++d) {
-          __asm__ __volatile__("nop");
-        }
-        
-        digitalWriteFast(stepPins[i], INVERT_STEP_PULSE ? HIGH : LOW);
+        digitalWriteFast(stepPins[i], after ? (INVERT_STEP_PULSE ? LOW : HIGH) : (INVERT_STEP_PULSE ? HIGH : LOW));
       }
     }
 
