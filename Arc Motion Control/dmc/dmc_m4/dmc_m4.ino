@@ -127,7 +127,7 @@ void setup()
 #else
   htim1.Init.Prescaler = 59; // Giga R1 runs at 480 MHz
 #endif
-  htim1.Init.Period = 39; # was 19 in my code?
+  htim1.Init.Period = 19;
   __HAL_RCC_TIM1_CLK_ENABLE();
   HAL_NVIC_SetPriority(TIM1_UP_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
