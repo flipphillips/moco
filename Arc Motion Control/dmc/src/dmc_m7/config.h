@@ -27,10 +27,14 @@
 #define LOGIC_OUT_1 D41
 
 // set a pin for an e-stop switch. uses pull-up resistor, so switch needs to connect pin to ground.
-//#define KILL_SWITCH_PIN  D48
+#define KILL_SWITCH_PIN  D48
 
 // set a pin for a logic switch input. uses pull-up resistor, so switch needs to connect pin to ground.
-//#define LOGIC_SWITCH_PIN  D49
+// #define LOGIC_SWITCH_PIN  D49
+
+// display
+#define OLED_SDA D20
+#define OLED_SCL D21
 
 #elif defined(ARDUINO_ARCH_MBED_PORTENTA)
 

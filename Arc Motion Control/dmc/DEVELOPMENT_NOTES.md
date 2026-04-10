@@ -11,6 +11,21 @@
 	* The fix involved reverting the pulse generation algorithm and timing constants in `src/dmc_m4/` to match the simpler, more stable implementation from the `dmcDIST` reference code.
 * **Hardware Driver Info:** The system is driving Centent CNO-145/162 motors via a Kuper card, which has an open-collector TTL-level interface. We are using 74xxxx125 buffers. The Kuper card triggers on a falling (5V -> GND) edge. The code now supports this via `INVERT_STEP_PULSE = true`.
 
+## Current Plans & Observations
+
+### 1. Local OLED Status Display (M7 Core)
+* **Goal:** Add an I2C OLED (SSD1306) to show high-level system state (READY, MOVING, E-STOP), motor activity, and camera triggers.
+* **Hardware Constraints:** The Arduino Giga R1 is strictly **3.3V logic**. The OLED *must* be powered via the 3.3V pin. Using 5V will damage the D20 (SDA) and D21 (SCL) pins due to the display's onboard pull-up resistors.
+* **Software Architecture:** To maintain perfectly smooth motor pulses on the M4 core, screen rendering (which takes several milliseconds over I2C) will be restricted exclusively to the M7 core inside a 250ms (4Hz) non-blocking debug timer. 
+
+### 2. Unreal Engine Integration (DMC Binary Protocol)
+* **Discovery:** The rig uses the advanced **DMC-Lite binary protocol**, *not* the older ASCII text-based DFMoco protocol found in the `/DFMoco` folder. 
+* **Goal:** Build an Unreal Engine C++ plugin to allow direct control of the rig for Virtual Production and Pre-viz, acting as a direct host.
+* **Protocol Details:** 
+  * Unreal will need to send Little-Endian binary packets over Serial.
+  * Every packet requires a 10-byte header (Sync bytes 'D' 'F', ID, Command, Length) and a custom 2-byte Fletcher-style checksum. If the checksum isn't exact, the M7 core will drop the packet.
+* **"Load and Go" Workflow:** Instead of live-streaming positions (which suffers from serial latency), the Unreal Sequencer will pre-calculate the camera transform curve into arrays of steps per frame. These are uploaded via `DMC_MSG_RT_UPLOAD_MOVE_AXIS`. The rig is then triggered with `DMC_MSG_RT_RUN_MOVE`, which handles the physical pre-roll, mathematically perfect curve execution, camera triggering, and post-roll entirely in hardware.
+
 *** The reset of this document is more 'background' than imperative stuff, consult but don't take as gospel, esp re: timing, etc ***
 
 
