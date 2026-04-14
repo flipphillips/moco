@@ -9,7 +9,14 @@
 * **FIXED (2026-03-05):** The "bursty" pulse train issue has been resolved.
 	* The cause was a combination of a custom `nop`-based pulse-width loop and an incorrect `OUTER_LOOP_TICKS` value in the M4 code.
 	* The fix involved reverting the pulse generation algorithm and timing constants in `src/dmc_m4/` to match the simpler, more stable implementation from the `dmcDIST` reference code.
-* **Hardware Driver Info:** The system is driving Centent CNO-145/162 motors via a Kuper card, which has an open-collector TTL-level interface. We are using 74xxxx125 buffers. The Kuper card triggers on a falling (5V -> GND) edge. The code now supports this via `INVERT_STEP_PULSE = true`.
+* **Hardware Driver Info:**
+	* **Interface Type:** Common Anode (Opto-isolated). The motor controllers provide a shared +5V (Anode) to the step/direction pins. We "sink" current to Ground to trigger a pulse.
+	* **Logic Level:** Active-Low (Falling Edge). The software is configured with `INVERT_STEP_PULSE = true` in `config.h`, meaning the pins are HIGH (3.3V/5V) when idle and pulse LOW (0V) to step.
+	* **Buffer IC:** **SN74AHCT541N** powered by **5V Vcc**. 
+		* The "T" (TTL) inputs safely accept the Arduino's 3.3V signals.
+		* The 5V Vcc ensures the buffer outputs a full 5.0V when HIGH, matching the motor controller's internal rail and ensuring the opto-isolators are 100% OFF.
+	* **Board Modification:** External pull-up resistor packs have been removed. The AHCT541 actively drives the lines, and the motor controller's internal pull-up (via the opto LED) provides the reference voltage.
+	* **Legacy Support:** This configuration mimics the "Kuper" behavior (falling edge trigger) while safely interfacing the 3.3V Arduino with 5V industrial motor controllers.
 
 ## Current Plans & Observations
 
