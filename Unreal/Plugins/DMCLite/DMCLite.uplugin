@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "DMCLite",
+	"Description": "High-performance motion control integration for DMC-Lite hardware.",
+	"Category": "Motion Control",
+	"CreatedBy": "DZED Systems LLC",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "DMCLite",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

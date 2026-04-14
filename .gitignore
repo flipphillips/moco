@@ -1,6 +1,16 @@
-_Attic
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Unreal Unpacked Project
+Unreal/Coppola_MoCo_Rig/
+
+# OS Specific
 .DS_Store
-*.tmp
-*.log
-notes
-README.pdf
+Thumbs.db
+
+# Build artifacts
+*.o
+*.elf
+*.bin
