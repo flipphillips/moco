@@ -20,11 +20,17 @@
 
 ## Current Plans & Observations
 
-### 1. Local OLED Status Display (M7 Core)
-* **Goal:** Add an I2C OLED (SSD1306) to show high-level system state (READY, MOVING, E-STOP), motor activity, and camera triggers.
-* **Hardware Constraints:** The Arduino Giga R1 is strictly **3.3V logic**. The OLED *must* be powered via the 3.3V pin. Using 5V will damage the D20 (SDA) and D21 (SCL) pins due to the display's onboard pull-up resistors.
-* **Software Architecture:** To maintain perfectly smooth motor pulses on the M4 core, screen rendering (which takes several milliseconds over I2C) will be restricted exclusively to the M7 core inside a 250ms (4Hz) non-blocking debug timer. 
-
+### 1. Local OLED Status Display (M7 Core) - **IMPLEMENTED (2026-04-14)**
+*   **Goal:** Add an I2C OLED (SSD1306) to show high-level system state (READY, MOVING, E-STOP), motor activity, and camera triggers.
+*   **Hardware Constraints:** The Arduino Giga R1 is strictly **3.3V logic**. The OLED *must* be powered via the 3.3V pin. Using 5V will damage the D20 (SDA) and D21 (SCL) pins due to the display's onboard pull-up resistors.
+*   **Implementation:**
+    *   **Library:** `Adafruit SSD1306` and `Adafruit GFX`.
+    *   **Architecture:** Rendering restricted to M7 core at 4Hz (250ms interval) using a non-blocking `millis()` loop.
+    *   **UI Layout:** 
+        *   **Header:** System state (READY/MOVING/E-STOP) and "CAM" indicator.
+        *   **Body:** 8-axis activity indicators (`^` for forward, `v` for reverse, `-` for idle).
+        *   **Footer:** Heartbeat pixel/character (`*`) to confirm M7 loop health.
+*   **Validation:** Verified via `pio run -e giga_r1_m7`. I2C transactions are handled by the M7 to prevent interference with M4 step timing.
 ### 2. Unreal Engine Integration (DMC Binary Protocol)
 * **Discovery:** The rig uses the advanced **DMC-Lite binary protocol**, *not* the older ASCII text-based DFMoco protocol found in the `/DFMoco` folder. 
 * **Goal:** Build an Unreal Engine C++ plugin to allow direct control of the rig for Virtual Production and Pre-viz, acting as a direct host.
