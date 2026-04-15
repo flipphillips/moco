@@ -3,14 +3,43 @@
 .pioenvs/
 .piolibdeps/
 
-# Unreal Unpacked Project
-Unreal/Coppola_MoCo_Rig/
+# --- Unreal Project Integration ---
+# Root folders to allow
+!Unreal/Coppola_MoCo_Rig/
+
+# Unreal build and temporary files (Project & Plugin level)
+**/Binaries/
+**/Intermediate/
+**/Saved/
+**/DerivedDataCache/
+**/Build/
+**/*.pdb
+**/*.obj
+**/*.o
+**/*.dylib
+**/*.dll
+**/*.exe
+**/*.so
+
+# User specific or auto-generated IDE files
+.vscode/
+.vs/
+*.sln
+*.suo
+*.user
+*.ncb
+*.opensln
+*.vsprops
+*.xcodeproj
+*.xcworkspace
 
 # OS Specific
 .DS_Store
 Thumbs.db
 
-# Build artifacts
-*.o
+# Unreal Archives (Ignore backups/exports)
+Unreal/*.zip
+
+# Firmware Build Artifacts
 *.elf
 *.bin
