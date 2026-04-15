@@ -31,16 +31,28 @@
         *   **Body:** 8-axis activity indicators (`^` for forward, `v` for reverse, `-` for idle).
         *   **Footer:** Heartbeat pixel/character (`*`) to confirm M7 loop health.
 *   **Validation:** Verified via `pio run -e giga_r1_m7`. I2C transactions are handled by the M7 to prevent interference with M4 step timing.
-### 2. Unreal Engine Integration (DMC Binary Protocol)
-* **Discovery:** The rig uses the advanced **DMC-Lite binary protocol**, *not* the older ASCII text-based DFMoco protocol found in the `/DFMoco` folder. 
-* **Goal:** Build an Unreal Engine C++ plugin to allow direct control of the rig for Virtual Production and Pre-viz, acting as a direct host.
-* **Protocol Details:** 
-  * Unreal will need to send Little-Endian binary packets over Serial.
-  * Every packet requires a 10-byte header (Sync bytes 'D' 'F', ID, Command, Length) and a custom 2-byte Fletcher-style checksum. If the checksum isn't exact, the M7 core will drop the packet.
-* **"Load and Go" Workflow:** Instead of live-streaming positions (which suffers from serial latency), the Unreal Sequencer will pre-calculate the camera transform curve into arrays of steps per frame. These are uploaded via `DMC_MSG_RT_UPLOAD_MOVE_AXIS`. The rig is then triggered with `DMC_MSG_RT_RUN_MOVE`, which handles the physical pre-roll, mathematically perfect curve execution, camera triggering, and post-roll entirely in hardware.
+### 2. Unreal Engine Plugin (DMCLite) - **IMPLEMENTED (2026-04-15)**
+*   **Goal:** Build a high-performance C++ plugin to allow direct control of the rig from Unreal Engine (Coppola MoCo Rig project).
+*   **Architecture:** 
+    *   **Asynchronous Serial:** Uses a dedicated background thread (`FDMCSerialWorker`) to handle non-blocking I/O at 1ms poll rates.
+    *   **Protocol:** Implements the full DMC-Lite binary protocol (Sync: 'DF', 10-byte header, Fletcher-16 zero-sum checksum).
+    *   **Cross-Platform:** Support for Mac, Linux, and Windows using native serial APIs (termios/Windows COM).
+*   **Key Features:**
+    *   **Serial Port Discovery:** Static Blueprint function `GetAvailableSerialPorts()` to automatically list `/dev/tty.*` (Mac), `/dev/ttyUSB*` (Linux), and `REG_SZ` COM ports (Windows).
+    *   **Handshake Actor:** `ADMCActor` provides a drop-in testing interface to verify the `HI` command handshake with hardware.
+    *   **Blueprint Ready:** All core functions (`Connect`, `Disconnect`, `SendCommand`) are exposed to Blueprints. `MessageID` uses `int32` for BP compatibility.
+*   **Build System:** 
+    *   Integrated into `Unreal/Coppola_MoCo_Rig/Plugins/DMCLite`.
+    *   `build_dmclite.sh` script provided for one-click rebuilding on Mac/Linux.
 
 *** The reset of this document is more 'background' than imperative stuff, consult but don't take as gospel, esp re: timing, etc ***
 
+## Git Best Practices (Unreal Integration)
+
+The project now uses a professional Unreal-Git hybrid structure:
+1. **Git LFS:** Mandatory for `.uasset` and `.umap` files. Check `.gitattributes` for details.
+2. **Surgical .gitignore:** Blanket ignores for `Unreal/Coppola_MoCo_Rig/` have been removed. We now explicitly track the `Config/`, `Content/`, and `Source/` directories while ignoring `Saved/`, `Intermediate/`, `Binaries/`, and `DerivedDataCache/`.
+3. **Plugin Portability:** The `DMCLite` plugin is project-local, ensuring the rig is self-contained.
 
 ## PlatformIO Configuration
 
