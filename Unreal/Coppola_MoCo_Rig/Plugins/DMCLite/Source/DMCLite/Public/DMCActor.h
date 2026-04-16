@@ -27,8 +27,20 @@ public:
     int32 BaudRate;
 
     /** Handshake: Send HI command */
-    UFUNCTION(BlueprintCallable, Category = "DMCLite")
+    UFUNCTION(BlueprintCallable, CallInEditor, Category = "DMCLite")
     void SendHandshake();
+
+    /** Get status for a specific axis (1-indexed) */
+    UFUNCTION(BlueprintCallable, CallInEditor, Category = "DMCLite")
+    void GetMotorStatus(int32 Axis = 1);
+
+    /** Get current position for a specific axis (1-indexed) */
+    UFUNCTION(BlueprintCallable, CallInEditor, Category = "DMCLite")
+    void GetMotorPosition(int32 Axis = 1);
+
+    /** Reset position to zero for a specific axis (1-indexed) */
+    UFUNCTION(BlueprintCallable, CallInEditor, Category = "DMCLite")
+    void ResetMotorPosition(int32 Axis = 1);
 
     /** The serial handler instance */
     UPROPERTY(BlueprintReadOnly, Category = "DMCLite")

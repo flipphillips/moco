@@ -112,7 +112,17 @@ bool FDMCSerialWorker::OpenPort()
     struct termios options;
     tcgetattr(fd, &options);
     
-    speed_t speed = B115200; // Default to 115200
+    speed_t speed = B115200;
+    switch (BaudRate)
+    {
+        case 9600:   speed = B9600;   break;
+        case 19200:  speed = B19200;  break;
+        case 38400:  speed = B38400;  break;
+        case 57600:  speed = B57600;  break;
+        case 115200: speed = B115200; break;
+        case 230400: speed = B230400; break;
+        default:     speed = B115200; break;
+    }
     cfsetispeed(&options, speed);
     cfsetospeed(&options, speed);
 
