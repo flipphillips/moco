@@ -3,13 +3,20 @@
 
 # Default UE paths
 UE_MAC="/Users/Shared/Epic Games/UE_5.7"
-UE_LINUX="/opt/EpicGames/UnrealEngine_5.7"
+UE_LINUX="/opt/UE_5.7"
 
-# Determine UE Path
+
+# Determine UE Path and Target Platform
 if [[ "$OSTYPE" == "darwin"* ]]; then
     UE_ROOT="${UE_ROOT:-$UE_MAC}"
-else
+    TARGET_PLATFORM="Mac"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     UE_ROOT="${UE_ROOT:-$UE_LINUX}"
+    TARGET_PLATFORM="Linux"
+else
+    # Fallback for Windows (Git Bash/MSYS)
+    TARGET_PLATFORM="Win64"
+    UE_ROOT="${UE_ROOT:-C:/Program Files/Epic Games/UE_5.7}"
 fi
 
 RUN_UAT="$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh"
@@ -25,6 +32,7 @@ PACKAGE_DIR="$PLUGIN_DIR/Build"
 PROJECT_UPROJECT="$(cd "$PLUGIN_DIR/../../" && pwd)/Coppola_MoCo_Rig.uproject"
 
 echo "Building DMCLite Plugin..."
+echo "Platform: $TARGET_PLATFORM"
 echo "Plugin: $PLUGIN_DIR/DMCLite.uplugin"
 echo "Project: $PROJECT_UPROJECT"
 echo "Output: $PACKAGE_DIR"
@@ -38,6 +46,7 @@ rm -rf "$PLUGIN_DIR/Binaries"
     -Plugin="$PLUGIN_DIR/DMCLite.uplugin" \
     -Package="$PACKAGE_DIR" \
     -Project="$PROJECT_UPROJECT" \
+    -TargetPlatforms="$TARGET_PLATFORM" \
     -Rocket
 
 if [ $? -eq 0 ]; then
