@@ -13,6 +13,16 @@
 #include "motion.h"
 
 #include <RPC.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+#define SCREEN_ADDRESS 0x3C
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+unsigned long lastOledTime = 0;
 
 #ifdef CORE_CM4
 #error "Make sure to target the Main core with flash split 1.5MB M7 + 0.5MB M4"
@@ -193,6 +203,21 @@ void setup()
   Serial.begin(115200);
   Serial1.begin(115200);
 
+  Wire.begin();
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+#if defined(DEBUG)
+    DEBUG_SERIAL.println(F("SSD1306 allocation failed"));
+#endif
+  } else {
+    display.clearDisplay();
+    display.setTextColor(SSD1306_WHITE);
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.println(F("DMC-Lite"));
+    display.println(F("OLED Init OK"));
+    display.display();
+  }
+
   pinMode(LEDR, OUTPUT);
   pinMode(LEDG, OUTPUT);
   pinMode(LEDB, OUTPUT);
@@ -318,6 +343,51 @@ void loop()
   int eStopOn = 0;
 
   transmitMessages();
+
+  if (millis() - lastOledTime >= 250) {
+    lastOledTime = millis();
+    if(sharedData) {
+      display.clearDisplay();
+      
+      // Header
+      display.setCursor(0, 0);
+      if (hardStop) display.print(F("State: E-STOP"));
+      else if (motorsMoving) display.print(F("State: MOVING"));
+      else display.print(F("State: READY"));
+
+      if (sharedData->cameraValue) {
+        display.setCursor(100, 0);
+        display.print(F("CAM"));
+      }
+
+      // Motors
+      display.setCursor(0, 16);
+      display.print(F("Axis: "));
+      for (int i = 0; i < 4 && i < MOTOR_COUNT; ++i) {
+        if (motors[i].currentVelocity > 0.001f) display.print(F("^"));
+        else if (motors[i].currentVelocity < -0.001f) display.print(F("v"));
+        else display.print(F("-"));
+        display.print(F(" "));
+      }
+      
+      if (MOTOR_COUNT > 4) {
+        display.setCursor(36, 26);
+        for (int i = 4; i < MOTOR_COUNT; ++i) {
+          if (motors[i].currentVelocity > 0.001f) display.print(F("^"));
+          else if (motors[i].currentVelocity < -0.001f) display.print(F("v"));
+          else display.print(F("-"));
+          display.print(F(" "));
+        }
+      }
+
+      // Footer
+      display.setCursor(0, 56);
+      display.print(F("HB: "));
+      display.print((millis() / 500) % 2 ? F("*") : F(" "));
+      
+      display.display();
+    }
+  }
 
 #ifdef DEBUG
   static unsigned long lastDebugTime = 0;

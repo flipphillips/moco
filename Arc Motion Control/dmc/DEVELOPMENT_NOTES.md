@@ -9,10 +9,50 @@
 * **FIXED (2026-03-05):** The "bursty" pulse train issue has been resolved.
 	* The cause was a combination of a custom `nop`-based pulse-width loop and an incorrect `OUTER_LOOP_TICKS` value in the M4 code.
 	* The fix involved reverting the pulse generation algorithm and timing constants in `src/dmc_m4/` to match the simpler, more stable implementation from the `dmcDIST` reference code.
-* **Hardware Driver Info:** The system is driving Centent CNO-145/162 motors via a Kuper card, which has an open-collector TTL-level interface. We are using 74xxxx125 buffers. The Kuper card triggers on a falling (5V -> GND) edge. The code now supports this via `INVERT_STEP_PULSE = true`.
+* **Hardware Driver Info:**
+	* **Interface Type:** Common Anode (Opto-isolated). The motor controllers provide a shared +5V (Anode) to the step/direction pins. We "sink" current to Ground to trigger a pulse.
+	* **Logic Level:** Active-Low (Falling Edge). The software is configured with `INVERT_STEP_PULSE = true` in `config.h`, meaning the pins are HIGH (3.3V/5V) when idle and pulse LOW (0V) to step.
+	* **Buffer IC:** **SN74AHCT541N** powered by **5V Vcc**. 
+		* The "T" (TTL) inputs safely accept the Arduino's 3.3V signals.
+		* The 5V Vcc ensures the buffer outputs a full 5.0V when HIGH, matching the motor controller's internal rail and ensuring the opto-isolators are 100% OFF.
+	* **Board Modification:** External pull-up resistor packs have been removed. The AHCT541 actively drives the lines, and the motor controller's internal pull-up (via the opto LED) provides the reference voltage.
+	* **Legacy Support:** This configuration mimics the "Kuper" behavior (falling edge trigger) while safely interfacing the 3.3V Arduino with 5V industrial motor controllers.
+
+## Current Plans & Observations
+
+### 1. Local OLED Status Display (M7 Core) - **IMPLEMENTED (2026-04-14)**
+*   **Goal:** Add an I2C OLED (SSD1306) to show high-level system state (READY, MOVING, E-STOP), motor activity, and camera triggers.
+*   **Hardware Constraints:** The Arduino Giga R1 is strictly **3.3V logic**. The OLED *must* be powered via the 3.3V pin. Using 5V will damage the D20 (SDA) and D21 (SCL) pins due to the display's onboard pull-up resistors.
+*   **Implementation:**
+    *   **Library:** `Adafruit SSD1306` and `Adafruit GFX`.
+    *   **Architecture:** Rendering restricted to M7 core at 4Hz (250ms interval) using a non-blocking `millis()` loop.
+    *   **UI Layout:** 
+        *   **Header:** System state (READY/MOVING/E-STOP) and "CAM" indicator.
+        *   **Body:** 8-axis activity indicators (`^` for forward, `v` for reverse, `-` for idle).
+        *   **Footer:** Heartbeat pixel/character (`*`) to confirm M7 loop health.
+*   **Validation:** Verified via `pio run -e giga_r1_m7`. I2C transactions are handled by the M7 to prevent interference with M4 step timing.
+### 2. Unreal Engine Plugin (DMCLite) - **IMPLEMENTED (2026-04-15)**
+*   **Goal:** Build a high-performance C++ plugin to allow direct control of the rig from Unreal Engine (Coppola MoCo Rig project).
+*   **Architecture:** 
+    *   **Asynchronous Serial:** Uses a dedicated background thread (`FDMCSerialWorker`) to handle non-blocking I/O at 1ms poll rates.
+    *   **Protocol:** Implements the full DMC-Lite binary protocol (Sync: 'DF', 10-byte header, Fletcher-16 zero-sum checksum).
+    *   **Cross-Platform:** Support for Mac, Linux, and Windows using native serial APIs (termios/Windows COM).
+*   **Key Features:**
+    *   **Serial Port Discovery:** Static Blueprint function `GetAvailableSerialPorts()` to automatically list `/dev/tty.*` (Mac), `/dev/ttyUSB*` (Linux), and `REG_SZ` COM ports (Windows).
+    *   **Handshake Actor:** `ADMCActor` provides a drop-in testing interface to verify the `HI` command handshake with hardware.
+    *   **Blueprint Ready:** All core functions (`Connect`, `Disconnect`, `SendCommand`) are exposed to Blueprints. `MessageID` uses `int32` for BP compatibility.
+*   **Build System:** 
+    *   Integrated into `Unreal/Coppola_MoCo_Rig/Plugins/DMCLite`.
+    *   `build_dmclite.sh` script provided for one-click rebuilding on Mac/Linux.
 
 *** The reset of this document is more 'background' than imperative stuff, consult but don't take as gospel, esp re: timing, etc ***
 
+## Git Best Practices (Unreal Integration)
+
+The project now uses a professional Unreal-Git hybrid structure:
+1. **Git LFS:** Mandatory for `.uasset` and `.umap` files. Check `.gitattributes` for details.
+2. **Surgical .gitignore:** Blanket ignores for `Unreal/Coppola_MoCo_Rig/` have been removed. We now explicitly track the `Config/`, `Content/`, and `Source/` directories while ignoring `Saved/`, `Intermediate/`, `Binaries/`, and `DerivedDataCache/`.
+3. **Plugin Portability:** The `DMCLite` plugin is project-local, ensuring the rig is self-contained.
 
 ## PlatformIO Configuration
 
