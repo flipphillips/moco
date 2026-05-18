@@ -3,7 +3,7 @@
 
 # Default UE paths
 UE_MAC="/Users/Shared/Epic Games/UE_5.7"
-UE_LINUX="/opt/UE_5.7"
+UE_LINUX="/home/local/UE"
 
 
 # Determine UE Path and Target Platform

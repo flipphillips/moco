@@ -19,10 +19,12 @@ void ADMCActor::BeginPlay()
         if (SerialHandler->Connect(PortName, BaudRate))
         {
             UE_LOG(LogTemp, Log, TEXT("DMC: Connected to %s"), *PortName);
+            OnConnectionChanged.Broadcast(true);
         }
         else
         {
             UE_LOG(LogTemp, Warning, TEXT("DMC: Failed to connect to %s"), *PortName);
+            OnConnectionChanged.Broadcast(false);
         }
     }
 }
@@ -92,6 +94,7 @@ void ADMCActor::HandlePacketReceived(const TArray<uint8>& Packet)
     if (CommandID == (uint16)DMCLite::ECommand::HI)
     {
         UE_LOG(LogTemp, Log, TEXT("DMC: Handshake SUCCESS! Hardware replied to HI."));
+        OnHandshakeReceived.Broadcast();
     }
     else if (CommandID == (uint16)DMCLite::ECommand::MOTOR_STATUS)
     {
@@ -100,6 +103,7 @@ void ADMCActor::HandlePacketReceived(const TArray<uint8>& Packet)
             uint8 Axis = Packet[DMCLite::HEADER_SIZE];
             uint8 Status = Packet[DMCLite::HEADER_SIZE + 1];
             UE_LOG(LogTemp, Log, TEXT("DMC: Axis %d Status: 0x%02X"), Axis, Status);
+            OnMotorStatusReceived.Broadcast(Axis, Status);
         }
     }
     else if (CommandID == (uint16)DMCLite::ECommand::MOTOR_GET_POSITION)
@@ -109,6 +113,7 @@ void ADMCActor::HandlePacketReceived(const TArray<uint8>& Packet)
             uint8 Axis = Packet[DMCLite::HEADER_SIZE];
             int32 Position = *(int32*)&Packet[DMCLite::HEADER_SIZE + 1];
             UE_LOG(LogTemp, Log, TEXT("DMC: Axis %d Position: %d"), Axis, Position);
+            OnMotorPositionReceived.Broadcast(Axis, Position);
         }
     }
 }

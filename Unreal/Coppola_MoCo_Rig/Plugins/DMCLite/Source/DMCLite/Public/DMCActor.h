@@ -9,6 +9,11 @@ UCLASS()
 class DMCLITE_API ADMCActor : public AActor
 {
     GENERATED_BODY()
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDMCConnectionChanged, bool, bConnected);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDMCHandshakeReceived);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDMCMotorPositionReceived, int32, Axis, int32, Position);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDMCMotorStatusReceived, int32, Axis, uint8, Status);
+
     
 public:    
     ADMCActor();
@@ -25,6 +30,18 @@ public:
     /** Baud rate for the connection */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DMCLite")
     int32 BaudRate;
+    UPROPERTY(BlueprintAssignable, Category = "DMCLite")
+    FOnDMCConnectionChanged OnConnectionChanged;
+
+    UPROPERTY(BlueprintAssignable, Category = "DMCLite")
+    FOnDMCHandshakeReceived OnHandshakeReceived;
+
+    UPROPERTY(BlueprintAssignable, Category = "DMCLite")
+    FOnDMCMotorPositionReceived OnMotorPositionReceived;
+
+    UPROPERTY(BlueprintAssignable, Category = "DMCLite")
+    FOnDMCMotorStatusReceived OnMotorStatusReceived;
+
 
     /** Handshake: Send HI command */
     UFUNCTION(BlueprintCallable, CallInEditor, Category = "DMCLite")
