@@ -203,12 +203,22 @@ void setup()
   Serial.begin(115200);
   Serial1.begin(115200);
 
+  pinMode(LEDR, OUTPUT);
+  pinMode(LEDG, OUTPUT);
+  pinMode(LEDB, OUTPUT);
+  digitalWrite(LEDR, HIGH); // Turn off Red
+  digitalWrite(LEDG, HIGH); // Turn off Green
+  digitalWrite(LEDB, HIGH); // Turn off Blue
+
   Wire.begin();
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("OLED Init FAILED. Check wiring/address. Red LED is ON."));
 #if defined(DEBUG)
-    DEBUG_SERIAL.println(F("SSD1306 allocation failed"));
+    DEBUG_SERIAL.println(F("OLED Init FAILED. Check wiring/address. Red LED is ON."));
 #endif
+    digitalWrite(LEDR, LOW); // Turn on Red LED to indicate persistent error
   } else {
+    Serial.println(F("OLED Init OK."));
     display.clearDisplay();
     display.setTextColor(SSD1306_WHITE);
     display.setTextSize(1);
@@ -218,10 +228,6 @@ void setup()
     display.display();
   }
 
-  pinMode(LEDR, OUTPUT);
-  pinMode(LEDG, OUTPUT);
-  pinMode(LEDB, OUTPUT);
-
 #ifdef LOGIC_SWITCH_PIN
   pinMode(LOGIC_SWITCH_PIN, INPUT_PULLUP);
 #endif
@@ -230,6 +236,7 @@ void setup()
   digitalWrite(LEDG, HIGH);
   digitalWrite(LEDB, HIGH);
 
+  // Blink blue LED to show setup is continuing regardless of OLED status
   for (int i = 0; i < 3; ++i)
   {
     digitalWrite(LEDB, LOW);
